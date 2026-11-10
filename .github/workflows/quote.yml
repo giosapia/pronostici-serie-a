@@ -1,0 +1,31 @@
+name: Quote operatori
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "discover = esplora il servizio (poche richieste)"
+        default: discover
+permissions:
+  contents: write
+jobs:
+  quote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Scarica le quote
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+          MODE: ${{ github.event.inputs.mode || 'discover' }}
+        run: node scripts/quote.mjs
+      - name: Salva i file nel repository
+        run: |
+          git config user.name "quote-bot"
+          git config user.email "quote-bot@users.noreply.github.com"
+          git add data
+          if ! git diff --cached --quiet; then
+            git commit -m "Aggiornamento quote"
+            git push
+          fi
