@@ -1,0 +1,98 @@
+{
+ "status": 200,
+ "totale": 321,
+ "italiani": [
+  {
+   "bookmakerName": "BetFlag IT",
+   "slug": "betflag.it",
+   "liveOdds": true,
+   "cloneOf": "goldbet.it"
+  },
+  {
+   "bookmakerName": "Bwin",
+   "slug": "bwin",
+   "liveOdds": true,
+   "cloneOf": null
+  },
+  {
+   "bookmakerName": "Bwin DE",
+   "slug": "bwin.de",
+   "liveOdds": true,
+   "cloneOf": null
+  },
+  {
+   "bookmakerName": "Bwin DK",
+   "slug": "bwin.dk",
+   "liveOdds": true,
+   "cloneOf": null
+  },
+  {
+   "bookmakerName": "Bwin ES",
+   "slug": "bwin.es",
+   "liveOdds": true,
+   "cloneOf": null
+  },
+  {
+   "bookmakerName": "Bwin FR",
+   "slug": "bwin.fr",
+   "liveOdds": true,
+   "cloneOf": null
+  },
+  {
+   "bookmakerName": "Eurobet IT",
+   "slug": "eurobet.it",
+   "liveOdds": true,
+   "cloneOf": null
+  },
+  {
+   "bookmakerName": "Goldbet IT",
+   "slug": "goldbet.it",
+   "liveOdds": true,
+   "cloneOf": null
+  },
+  {
+   "bookmakerName": "Lottomatica IT",
+   "slug": "lottomatica.it",
+   "liveOdds": true,
+   "cloneOf": "goldbet.it"
+  },
+  {
+   "bookmakerName": "Planetwin365 IT",
+   "slug": "planetwin365.it",
+   "liveOdds": true,
+   "cloneOf": "goldbet.it"
+  },
+  {
+   "bookmakerName": "PokerStars IT",
+   "slug": "pokerstars.it",
+   "liveOdds": true,
+   "cloneOf": "sisal.it"
+  },
+  {
+   "bookmakerName": "Sisal IT",
+   "slug": "sisal.it",
+   "liveOdds": true,
+   "cloneOf": null
+  },
+  {
+   "bookmakerName": "Snai IT",
+   "slug": "snai.it",
+   "liveOdds": true,
+   "cloneOf": "sisal.it"
+  }
+ ],
+ "esempio": [
+  {
+   "bookmakerName": "18Bet",
+   "slug": "18bet",
+   "liveOdds": true,
+   "cloneOf": null
+  },
+  {
+   "bookmakerName": "198Bet",
+   "slug": "198bet",
+   "liveOdds": true,
+   "cloneOf": null
+  }
+ ]
+}

@@ -1,0 +1,1724 @@
+{
+ "status": 200,
+ "totale": 1122,
+ "rilevanti": [
+  {
+   "marketId": 101,
+   "marketLength": 3,
+   "marketName": "Full Time Result",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 0,
+   "period": "fulltime",
+   "marketType": "1x2",
+   "outcomes": [
+    {
+     "outcomeId": 101,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 102,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 103,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 104,
+   "marketLength": 2,
+   "marketName": "Both Teams To Score",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 0,
+   "period": "fulltime",
+   "marketType": "bothteamsscore",
+   "outcomes": [
+    {
+     "outcomeId": 104,
+     "outcomeName": "Yes"
+    },
+    {
+     "outcomeId": 105,
+     "outcomeName": "No"
+    }
+   ]
+  },
+  {
+   "marketId": 106,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 0.5,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 106,
+     "outcomeName": "Over"
+    },
+    {
+     "outcomeId": 107,
+     "outcomeName": "Under"
+    }
+   ]
+  },
+  {
+   "marketId": 108,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 1.5,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 108,
+     "outcomeName": "Over"
+    },
+    {
+     "outcomeId": 109,
+     "outcomeName": "Under"
+    }
+   ]
+  },
+  {
+   "marketId": 1010,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 2.5,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 1011,
+     "outcomeName": "Under"
+    },
+    {
+     "outcomeId": 1010,
+     "outcomeName": "Over"
+    }
+   ]
+  },
+  {
+   "marketId": 1012,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 3.5,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 1012,
+     "outcomeName": "Over"
+    },
+    {
+     "outcomeId": 1013,
+     "outcomeName": "Under"
+    }
+   ]
+  },
+  {
+   "marketId": 1014,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 4.5,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 1014,
+     "outcomeName": "Over"
+    },
+    {
+     "outcomeId": 1015,
+     "outcomeName": "Under"
+    }
+   ]
+  },
+  {
+   "marketId": 1016,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 5.5,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 1017,
+     "outcomeName": "Under"
+    },
+    {
+     "outcomeId": 1016,
+     "outcomeName": "Over"
+    }
+   ]
+  },
+  {
+   "marketId": 1018,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 6.5,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 1018,
+     "outcomeName": "Over"
+    },
+    {
+     "outcomeId": 1019,
+     "outcomeName": "Under"
+    }
+   ]
+  },
+  {
+   "marketId": 1020,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 7.5,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 1020,
+     "outcomeName": "Over"
+    },
+    {
+     "outcomeId": 1021,
+     "outcomeName": "Under"
+    }
+   ]
+  },
+  {
+   "marketId": 1022,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 8.5,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 1023,
+     "outcomeName": "Under"
+    },
+    {
+     "outcomeId": 1022,
+     "outcomeName": "Over"
+    }
+   ]
+  },
+  {
+   "marketId": 1024,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -6,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1025,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1024,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1026,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -5.75,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1026,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1027,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1028,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -5.5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1028,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1029,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1030,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -5.25,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1030,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1031,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1032,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1033,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1032,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1034,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -4.75,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1035,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1034,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1036,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -4.5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1036,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1037,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1038,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -4.25,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1039,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1038,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1040,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -4,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1040,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1041,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1042,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -3.75,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1043,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1042,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1044,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -3.5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1044,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1045,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1046,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -3.25,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1046,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1047,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1048,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -3,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1049,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1048,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1050,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -2.75,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1050,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1051,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1052,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -2.5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1053,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1052,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1054,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -2.25,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1055,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1054,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1056,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -2,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1056,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1057,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1058,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -1.75,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1058,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1059,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1060,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -1.5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1061,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1060,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1062,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -1.25,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1063,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1062,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1064,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -1,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1064,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1065,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1066,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -0.75,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1067,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1066,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1068,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -0.5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1068,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1069,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1070,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -0.25,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1070,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1071,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1072,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 0,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1072,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1073,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1074,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 0.25,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1074,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1075,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1076,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 0.5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1077,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1076,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1078,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 0.75,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1078,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1079,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1080,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 1,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1080,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1081,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1082,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 1.25,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1083,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1082,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1084,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 1.5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1085,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1084,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1086,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 1.75,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1086,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1087,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1088,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 2,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1089,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1088,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1090,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 2.25,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1090,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1091,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1092,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 2.5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1093,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1092,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1094,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 2.75,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1095,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 1094,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 1096,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 3,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1096,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1097,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 1098,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 3.25,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 1098,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 1099,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10100,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 3.5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 10100,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10101,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10102,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 3.75,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 10103,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 10102,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 10104,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 4,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 10105,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 10104,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 10106,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 4.25,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 10106,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10107,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10108,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 4.5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 10108,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10109,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10110,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 4.75,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 10111,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 10110,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 10112,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 10112,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10113,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10114,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 5.25,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 10115,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 10114,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 10116,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 5.5,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 10116,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10117,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10118,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 5.75,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 10118,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10119,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10120,
+   "marketLength": 2,
+   "marketName": "Asian Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 6,
+   "period": "fulltime",
+   "marketType": "spreads",
+   "outcomes": [
+    {
+     "outcomeId": 10120,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10121,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10122,
+   "marketLength": 3,
+   "marketName": "European Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 6,
+   "period": "fulltime",
+   "marketType": "spreads-european",
+   "outcomes": [
+    {
+     "outcomeId": 10123,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 10124,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 10122,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 10125,
+   "marketLength": 3,
+   "marketName": "European Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 5,
+   "period": "fulltime",
+   "marketType": "spreads-european",
+   "outcomes": [
+    {
+     "outcomeId": 10126,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 10125,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10127,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10128,
+   "marketLength": 3,
+   "marketName": "European Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 4,
+   "period": "fulltime",
+   "marketType": "spreads-european",
+   "outcomes": [
+    {
+     "outcomeId": 10128,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10129,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 10130,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10131,
+   "marketLength": 3,
+   "marketName": "European Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 3,
+   "period": "fulltime",
+   "marketType": "spreads-european",
+   "outcomes": [
+    {
+     "outcomeId": 10133,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 10131,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10132,
+     "outcomeName": "X"
+    }
+   ]
+  },
+  {
+   "marketId": 10134,
+   "marketLength": 3,
+   "marketName": "European Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 2,
+   "period": "fulltime",
+   "marketType": "spreads-european",
+   "outcomes": [
+    {
+     "outcomeId": 10135,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 10134,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10136,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10137,
+   "marketLength": 3,
+   "marketName": "European Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 1,
+   "period": "fulltime",
+   "marketType": "spreads-european",
+   "outcomes": [
+    {
+     "outcomeId": 10138,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 10139,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 10137,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 10140,
+   "marketLength": 3,
+   "marketName": "European Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -1,
+   "period": "fulltime",
+   "marketType": "spreads-european",
+   "outcomes": [
+    {
+     "outcomeId": 10141,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 10140,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10142,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10143,
+   "marketLength": 3,
+   "marketName": "European Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -2,
+   "period": "fulltime",
+   "marketType": "spreads-european",
+   "outcomes": [
+    {
+     "outcomeId": 10145,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 10144,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 10143,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 10146,
+   "marketLength": 3,
+   "marketName": "European Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -3,
+   "period": "fulltime",
+   "marketType": "spreads-european",
+   "outcomes": [
+    {
+     "outcomeId": 10147,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 10148,
+     "outcomeName": "2"
+    },
+    {
+     "outcomeId": 10146,
+     "outcomeName": "1"
+    }
+   ]
+  },
+  {
+   "marketId": 10149,
+   "marketLength": 3,
+   "marketName": "European Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -4,
+   "period": "fulltime",
+   "marketType": "spreads-european",
+   "outcomes": [
+    {
+     "outcomeId": 10150,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 10149,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10151,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10152,
+   "marketLength": 3,
+   "marketName": "European Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -5,
+   "period": "fulltime",
+   "marketType": "spreads-european",
+   "outcomes": [
+    {
+     "outcomeId": 10153,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 10152,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10154,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10155,
+   "marketLength": 3,
+   "marketName": "European Handicap",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": -6,
+   "period": "fulltime",
+   "marketType": "spreads-european",
+   "outcomes": [
+    {
+     "outcomeId": 10155,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 10156,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 10157,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 10158,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 0.25,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 10158,
+     "outcomeName": "Over"
+    },
+    {
+     "outcomeId": 10159,
+     "outcomeName": "Under"
+    }
+   ]
+  },
+  {
+   "marketId": 10160,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 0.75,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 10161,
+     "outcomeName": "Under"
+    },
+    {
+     "outcomeId": 10160,
+     "outcomeName": "Over"
+    }
+   ]
+  },
+  {
+   "marketId": 10162,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 1,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 10162,
+     "outcomeName": "Over"
+    },
+    {
+     "outcomeId": 10163,
+     "outcomeName": "Under"
+    }
+   ]
+  },
+  {
+   "marketId": 10164,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 1.25,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 10165,
+     "outcomeName": "Under"
+    },
+    {
+     "outcomeId": 10164,
+     "outcomeName": "Over"
+    }
+   ]
+  },
+  {
+   "marketId": 10166,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 1.75,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 10166,
+     "outcomeName": "Over"
+    },
+    {
+     "outcomeId": 10167,
+     "outcomeName": "Under"
+    }
+   ]
+  },
+  {
+   "marketId": 10168,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 2,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 10168,
+     "outcomeName": "Over"
+    },
+    {
+     "outcomeId": 10169,
+     "outcomeName": "Under"
+    }
+   ]
+  },
+  {
+   "marketId": 10170,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 2.25,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 10171,
+     "outcomeName": "Under"
+    },
+    {
+     "outcomeId": 10170,
+     "outcomeName": "Over"
+    }
+   ]
+  },
+  {
+   "marketId": 10172,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 2.75,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 10173,
+     "outcomeName": "Under"
+    },
+    {
+     "outcomeId": 10172,
+     "outcomeName": "Over"
+    }
+   ]
+  }
+ ],
+ "esempio": [
+  {
+   "marketId": 101,
+   "marketLength": 3,
+   "marketName": "Full Time Result",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 0,
+   "period": "fulltime",
+   "marketType": "1x2",
+   "outcomes": [
+    {
+     "outcomeId": 101,
+     "outcomeName": "1"
+    },
+    {
+     "outcomeId": 102,
+     "outcomeName": "X"
+    },
+    {
+     "outcomeId": 103,
+     "outcomeName": "2"
+    }
+   ]
+  },
+  {
+   "marketId": 104,
+   "marketLength": 2,
+   "marketName": "Both Teams To Score",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 0,
+   "period": "fulltime",
+   "marketType": "bothteamsscore",
+   "outcomes": [
+    {
+     "outcomeId": 104,
+     "outcomeName": "Yes"
+    },
+    {
+     "outcomeId": 105,
+     "outcomeName": "No"
+    }
+   ]
+  },
+  {
+   "marketId": 106,
+   "marketLength": 2,
+   "marketName": "Over Under Full Time",
+   "playerProp": false,
+   "sportId": 10,
+   "handicap": 0.5,
+   "period": "fulltime",
+   "marketType": "totals",
+   "outcomes": [
+    {
+     "outcomeId": 106,
+     "outcomeName": "Over"
+    },
+    {
+     "outcomeId": 107,
+     "outcomeName": "Under"
+    }
+   ]
+  }
+ ]
+}

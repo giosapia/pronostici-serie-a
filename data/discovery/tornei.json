@@ -1,0 +1,346 @@
+{
+ "status": 200,
+ "serieA": [
+  {
+   "tournamentId": 23,
+   "tournamentSlug": "serie-a",
+   "tournamentName": "Serie A",
+   "categorySlug": "italy",
+   "categoryName": "Italy",
+   "futureFixtures": 280,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 92,
+   "tournamentSlug": "carioca",
+   "tournamentName": "Carioca, Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 325,
+   "tournamentSlug": "brasileiro-serie-a",
+   "tournamentName": "Brasileiro Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 42,
+   "upcomingFixtures": 2,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 372,
+   "tournamentSlug": "paulista-serie-a1",
+   "tournamentName": "Paulista, Serie A1",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 374,
+   "tournamentSlug": "baiano",
+   "tournamentName": "Baiano, Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 376,
+   "tournamentSlug": "catarinense-serie-a",
+   "tournamentName": "Catarinense, Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 377,
+   "tournamentSlug": "gaucho-serie-a1",
+   "tournamentName": "Gaucho, Serie A1",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 378,
+   "tournamentSlug": "cearense",
+   "tournamentName": "Cearense, Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 1234,
+   "tournamentSlug": "paulista-serie-a2",
+   "tournamentName": "Paulista, Serie A2",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 1614,
+   "tournamentSlug": "paulista-serie-a3",
+   "tournamentName": "Paulista, Serie A3",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 13685,
+   "tournamentSlug": "u20-campeonato-brasileiro",
+   "tournamentName": "U20 Brasileiro Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 15227,
+   "tournamentSlug": "alagoano",
+   "tournamentName": "Alagoano, Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 20808,
+   "tournamentSlug": "serie-a-women",
+   "tournamentName": "Serie A, Women",
+   "categorySlug": "italy",
+   "categoryName": "Italy",
+   "futureFixtures": 102,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 24359,
+   "tournamentSlug": "maranhense",
+   "tournamentName": "Maranhense, Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 27749,
+   "tournamentSlug": "paraense",
+   "tournamentName": "Paraense, Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 27851,
+   "tournamentSlug": "candango-serie-a",
+   "tournamentName": "Candango, Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 29118,
+   "tournamentSlug": "amapaense",
+   "tournamentName": "Amapaense, Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 32039,
+   "tournamentSlug": "brasileiro-serie-a2-women",
+   "tournamentName": "Brasileiro Serie A2, Women",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 32221,
+   "tournamentSlug": "serie-a-srl",
+   "tournamentName": "Serie A SRL",
+   "categorySlug": "simulated-reality-league",
+   "categoryName": "Simulated Reality League",
+   "futureFixtures": 10,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 35791,
+   "tournamentSlug": "gaucho-serie-a2",
+   "tournamentName": "Gaucho, Serie A2",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 35795,
+   "tournamentSlug": "paulista-serie-a4",
+   "tournamentName": "Paulista, Serie A4",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 36485,
+   "tournamentSlug": "carioca-serie-a2",
+   "tournamentName": "Carioca, Serie A2",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 38221,
+   "tournamentSlug": "liga-premier-serie-a-apertura",
+   "tournamentName": "Liga Premier Serie A, Apertura",
+   "categorySlug": "mexico",
+   "categoryName": "Mexico",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 38223,
+   "tournamentSlug": "liga-premier-serie-a-clausura",
+   "tournamentName": "Liga Premier Serie A, Clausura",
+   "categorySlug": "mexico",
+   "categoryName": "Mexico",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 39459,
+   "tournamentSlug": "u20-carioca-serie-a",
+   "tournamentName": "U20 Carioca, Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 8,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 39761,
+   "tournamentSlug": "u20-gaucho-serie-a1",
+   "tournamentName": "U20 Gaucho, Serie A1",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 40533,
+   "tournamentSlug": "liga-premier-serie-a",
+   "tournamentName": "Liga Premier Serie A",
+   "categorySlug": "mexico",
+   "categoryName": "Mexico",
+   "futureFixtures": 180,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 41113,
+   "tournamentSlug": "pernambucano-serie-a2",
+   "tournamentName": "Pernambucano, Serie A2",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 46881,
+   "tournamentSlug": "u20-catarinense-serie-a",
+   "tournamentName": "U20 Catarinense, Serie A",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 47123,
+   "tournamentSlug": "u20-alagoano-serie-a1",
+   "tournamentName": "U20 Alagoano, Serie A1",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 47660,
+   "tournamentSlug": "serie-a-cup-women",
+   "tournamentName": "Serie A Cup, Women",
+   "categorySlug": "italy",
+   "categoryName": "Italy",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 48615,
+   "tournamentSlug": "u20-carioca-serie-a2",
+   "tournamentName": "U20 Carioca, Serie A2",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 6,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 48721,
+   "tournamentSlug": "sergipano-serie-a2",
+   "tournamentName": "Sergipano, Serie A2",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 14,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  },
+  {
+   "tournamentId": 53188,
+   "tournamentSlug": "paraense-serie-a3",
+   "tournamentName": "Paraense, Serie A3",
+   "categorySlug": "brazil",
+   "categoryName": "Brazil",
+   "futureFixtures": 0,
+   "upcomingFixtures": 0,
+   "liveFixtures": 0
+  }
+ ],
+ "totale": 2017
+}
