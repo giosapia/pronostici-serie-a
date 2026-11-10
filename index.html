@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pronostici Serie A</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: scheda partita a sinistra (esito, mercati, risultati esatti), quote e valore a destra; schede Risultati e Squadre per tarare il modello. */
+:root {
+  --bg: #eef2ee; --surface: #fbfdfb; --ink: #13201a; --muted: #55645b; --line: #d3dcd5;
+  --accent: #1c7a4b; --accent-ink: #ffffff; --home: #1c7a4b; --draw: #8a948d; --away: #2b5fa3;
+  --value: #b8690a; --value-bg: #fbeed8; --bad: #b3372c;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1612; --surface: #15201a; --ink: #e6eee8; --muted: #97a69c; --line: #26362d;
+    --accent: #4fc287; --accent-ink: #08140d; --home: #4fc287; --draw: #7d8a82; --away: #6a9be0;
+    --value: #e8a23a; --value-bg: #2c2210; --bad: #ef7a6c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1612; --surface: #15201a; --ink: #e6eee8; --muted: #97a69c; --line: #26362d;
+  --accent: #4fc287; --accent-ink: #08140d; --home: #4fc287; --draw: #7d8a82; --away: #6a9be0;
+  --value: #e8a23a; --value-bg: #2c2210; --bad: #ef7a6c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font: 15px/1.5 var(--f-body);
+  padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+h1 { font: 700 40px/1 var(--f-display); letter-spacing: .01em; margin: 0; text-transform: uppercase; text-wrap: balance; }
+h2 { font: 600 22px/1.1 var(--f-display); letter-spacing: .03em; text-transform: uppercase; margin: 0 0 12px; }
+.sub { color: var(--muted); margin: 6px 0 0; max-width: 70ch; }
+.mono { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.tabs button {
+  font: 600 18px/1 var(--f-display); letter-spacing: .04em; text-transform: uppercase;
+  background: none; border: 0; color: var(--muted); padding: 10px 14px; cursor: pointer;
+  border-bottom: 3px solid transparent; margin-bottom: -1px;
+}
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 860px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; min-width: 0; }
+.stack { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+label { font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; display: block; margin-bottom: 4px; }
+select, input, textarea {
+  font: 15px var(--f-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 4px; padding: 8px 10px; width: 100%; min-width: 0;
+}
+input.num { font-family: var(--f-data); }
+.row { display: flex; gap: 10px; align-items: end; flex-wrap: wrap; }
+.row > * { flex: 1 1 130px; min-width: 0; }
+.btn {
+  font: 600 14px var(--f-body); background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 4px;
+  padding: 9px 14px; cursor: pointer; flex: 0 0 auto; width: auto;
+}
+.btn.ghost { background: none; color: var(--ink); border: 1px solid var(--line); }
+.board { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; text-align: center; margin: 4px 0 14px; }
+.board .t { font: 700 26px/1.05 var(--f-display); text-transform: uppercase; overflow-wrap: anywhere; }
+.board .xg { font: 500 34px/1 var(--f-data); font-variant-numeric: tabular-nums; }
+.board .cap { font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.bar { display: flex; height: 38px; border-radius: 4px; overflow: hidden; font: 500 14px/38px var(--f-data); color: #fff; }
+.bar > div { text-align: center; white-space: nowrap; overflow: hidden; min-width: 0; }
+.bar .h { background: var(--home); color: var(--accent-ink); } .bar .d { background: var(--draw); color: #fff; } .bar .a { background: var(--away); color: #fff; }
+.fair { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; margin-top: 6px; font-size: 13px; color: var(--muted); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { font-size: 11px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; text-align: left; font-weight: 500; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+td { padding: 7px 8px; border-bottom: 1px solid var(--line); }
+td.n, th.n { text-align: right; font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+.scroll { overflow-x: auto; }
+.heat { display: grid; grid-template-columns: 22px repeat(6, minmax(0, 1fr)); gap: 3px; font: 12px var(--f-data); }
+.heat .c { text-align: center; padding: 8px 0; border-radius: 3px; background: var(--bg); }
+.heat .hd { text-align: center; color: var(--muted); padding: 8px 0; }
+.heat .top { outline: 2px solid var(--ink); }
+.cols2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 560px) { .cols2 { grid-template-columns: minmax(0, 1fr); } .board .t { font-size: 21px; } }
+.odds { display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.tag { display: inline-block; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; color: var(--muted); }
+tr.val td { background: var(--value-bg); }
+.pill { font: 600 11px var(--f-body); text-transform: uppercase; letter-spacing: .06em; color: var(--value); border: 1px solid var(--value); border-radius: 3px; padding: 1px 6px; }
+.neg { color: var(--bad); }
+.note { color: var(--muted); font-size: 13px; }
+.msg { padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); font-size: 14px; }
+input[type=range] { padding: 0; accent-color: var(--accent); }
+.res li { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--line); align-items: center; }
+.res { list-style: none; margin: 0; padding: 0; max-height: 360px; overflow-y: auto; }
+.res button { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 3px; cursor: pointer; padding: 2px 8px; flex: 0 0 auto; }
+td input { padding: 4px 6px; width: 78px; font-family: var(--f-data); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; margin-bottom: 12px; }
+.seg button { font: 500 14px var(--f-body); background: none; color: var(--muted); border: 0; padding: 7px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+tr.pos td:first-child { border-left: 3px solid var(--accent); }
+.pg { font: 600 12px var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+.chips { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px; margin-bottom: 14px; }
+.chip { text-align: left; background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 9px 11px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-width: 0; font: 14px var(--f-body); }
+.chip b { font: 600 17px/1.15 var(--f-display); letter-spacing: .02em; text-transform: uppercase; overflow-wrap: anywhere; }
+.chip span { font: 12px var(--f-data); color: var(--muted); }
+.chip[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.more { margin: 4px 0 14px; border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; }
+.more summary { cursor: pointer; font-weight: 500; }
+.add { font: 600 14px var(--f-body); background: none; color: var(--accent); border: 1px solid var(--line); border-radius: 3px; cursor: pointer; padding: 1px 9px; }
+.kv { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-size: 14px; }
+.kv dt { color: var(--muted); } .kv dd { margin: 0; text-align: right; font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+.pm { border: 1px solid var(--line); border-radius: 5px; padding: 12px; margin-bottom: 10px; background: var(--bg); }
+.pm.saved { border-color: var(--accent); }
+.pm h3 { font: 600 20px/1.1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; margin: 0; }
+.pm .top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; flex-wrap: wrap; margin-bottom: 4px; }
+.pm .mod { font: 12.5px var(--f-data); color: var(--muted); margin-bottom: 10px; }
+.pm .row > * { flex: 1 1 90px; }
+.pm .sc { display: flex; align-items: center; gap: 6px; }
+.pm .sc input { text-align: center; font-family: var(--f-data); }
+.pm details { margin-top: 10px; }
+.pm summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+.ok { color: var(--accent); font-weight: 600; } .ko { color: var(--bad); font-weight: 600; }
+.badge { font: 600 11px var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent); border-radius: 3px; padding: 1px 6px; }
+.small { font-size: 13px; }
+[hidden] { display: none !important; }
+</style>
+
+</head><body>
+<div class="wrap">
+  <header>
+    <h1>Pronostici Serie A</h1>
+    <p class="sub">Modello di Poisson con correzione di Dixon-Coles. Stima gol attesi, esito, Under/Over e Gol/NoGol, poi li confronta con le quote del bookmaker per segnalare dove la probabilità stimata supera quella implicita.</p>
+    <p class="note" id="stato" style="margin:6px 0 0"></p>
+    
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="tab-match" aria-selected="true" data-tab="match">Partita</button>
+    <button role="tab" id="tab-cal" aria-selected="false" data-tab="cal">Calendario</button>
+    <button role="tab" id="tab-table" aria-selected="false" data-tab="table">Classifica</button>
+    <button role="tab" id="tab-reg" aria-selected="false" data-tab="reg">Pronostici</button>
+    <button role="tab" id="tab-ops" aria-selected="false" data-tab="ops">Operatori</button>
+    <button role="tab" id="tab-teams" aria-selected="false" data-tab="teams">Squadre</button>
+  </nav>
+
+  <section id="p-match" class="grid">
+    <div class="stack">
+      <div class="card">
+        <h2>Scegli la partita</h2>
+        <div id="pick"></div>
+        <p class="note" style="margin:0">Tocca una partita per analizzarla. Controlla che non sia già iniziata. Per un'altra partita usa i menu qui sotto.</p>
+      </div>
+      <div class="card">
+        <div class="row">
+          <div><label for="selH">Squadra di casa</label><select id="selH"></select></div>
+          <div><label for="selA">Squadra in trasferta</label><select id="selA"></select></div>
+          <button class="btn ghost" id="swap" type="button">Inverti</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="board">
+          <div><div class="t" id="nameH"></div></div>
+          <div><div class="xg" id="xg"></div><div class="cap">gol attesi</div></div>
+          <div><div class="t" id="nameA"></div></div>
+        </div>
+        <div class="bar" id="bar" role="img" aria-label="Probabilità di 1, X, 2"></div>
+        <div class="fair" id="fair"></div>
+      </div>
+      <div class="card">
+        <h2>Mercati</h2>
+        <div class="scroll"><table id="mk"></table></div>
+      </div>
+      <div class="card">
+        <h2>Risultati esatti</h2>
+        <div class="cols2">
+          <div>
+            <div class="heat" id="heat"></div>
+            <p class="note" style="margin:8px 0 0">Righe: gol della squadra di casa. Colonne: gol della trasferta. Valori in %.</p>
+          </div>
+          <div class="scroll"><table id="top"></table></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <h2>Quote e valore</h2>
+        <div class="row" style="margin-bottom:10px"><div><label for="selOp">Operatore</label><select id="selOp"></select></div></div>
+        <p class="note small" id="feedMsg" style="margin:-4px 0 10px"></p>
+        <div id="opChips" class="chips" style="margin-bottom:6px"></div>
+        <p class="note" style="margin-top:0">Inserisci le quote di un operatore per questa partita, poi cambia operatore e ripeti: la pagina confronta i prezzi. Le quote restano salvate in questo browser.</p>
+        <div class="odds">
+          <div><label for="o1">1</label><input class="num" id="o1" inputmode="decimal"></div>
+          <div><label for="oX">X</label><input class="num" id="oX" inputmode="decimal"></div>
+          <div><label for="o2">2</label><input class="num" id="o2" inputmode="decimal"></div>
+          <div><label for="oU">Under 2,5</label><input class="num" id="oU" inputmode="decimal"></div>
+          <div><label for="oO">Over 2,5</label><input class="num" id="oO" inputmode="decimal"></div>
+          <div><label for="oG">Gol</label><input class="num" id="oG" inputmode="decimal"></div>
+          <div><label for="oN">NoGol</label><input class="num" id="oN" inputmode="decimal"></div>
+        </div>
+        <details class="more" id="more">
+          <summary>Altri mercati: doppia chance, Multigol, Combo</summary>
+          <p class="note" style="margin:8px 0">Compila solo le quote che trovi per questa partita. Quelle vuote vengono ignorate.</p>
+          <div class="odds" id="moreOdds"></div>
+        </details>
+        <div class="row">
+          <div><label for="bank">Capitale (€)</label><input class="num" id="bank" inputmode="decimal" value="1000"></div>
+          <div><label for="kf">Quanto rischiare</label>
+            <select id="kf"><option value="0.125">Poco (prudente)</option><option value="0.25" selected>Medio</option><option value="0.5">Molto (aggressivo)</option></select></div>
+          <div><label for="minev">Vantaggio minimo (%)</label><input class="num" id="minev" inputmode="decimal" value="5"></div>
+          <div><label for="sim">Puntata da simulare (€)</label><input class="num" id="sim" inputmode="decimal" value="10"></div>
+        </div>
+        <details class="more"><summary>Cosa significano questi campi</summary>
+          <p class="note" style="margin:8px 0 0"><b>Capitale</b>: la somma che hai messo da parte per scommettere. <b>Quanto rischiare</b>: decide la puntata consigliata come quota del capitale (è il metodo di Kelly, che calcola la puntata ideale in base al vantaggio; la versione ridotta evita oscillazioni troppo forti). Consigliato: Poco o Medio. La puntata non supera mai il 5% del capitale. <b>Vantaggio minimo</b>: una giocata viene segnalata solo se la probabilità del modello, rapportata alla quota, supera di almeno questa percentuale il guadagno pari (per esempio 5% vuol dire che, ripetendo la giocata tante volte, ti aspetti di guadagnare in media 5 centesimi per ogni euro puntato). Con 0 ti segnala anche vantaggi minimi, che sono solo rumore. <b>Peso del modello</b>: se è 50%, la probabilità usata è metà del modello e metà delle quote del bookmaker (depurate dal suo margine). Un modello fatto su poche partite sbaglia più del mercato, quindi lascia pure 50% o meno.</p>
+        </details>
+        <div style="margin-top:12px">
+          <label for="trust">Peso del modello rispetto alle quote: <span id="trustv" class="mono"></span></label>
+          <input type="range" id="trust" min="0" max="100" step="5" value="50">
+          <p class="note" style="margin:4px 0 0">Il resto del peso va alle probabilità implicite del mercato, già depurate dal margine. Il mercato è in genere meglio calibrato di un modello costruito su pochi dati, quindi un peso del 100% al modello porta a vedere molto valore dove spesso non c'è.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Esito del confronto</h2>
+        <p class="pg" id="evOp"></p>
+        <div class="scroll"><table id="ev"></table></div>
+        <div id="bestWrap" hidden>
+          <h2 style="margin-top:18px">Quota migliore tra operatori</h2>
+          <div class="scroll"><table id="evb"></table></div>
+        </div>
+        <p id="evmsg" class="msg" style="margin-top:12px"></p>
+      </div>
+      <div class="card">
+        <h2>Schedina multipla<span id="sOp"></span></h2>
+        <p class="note" style="margin-top:0">Aggiungi una selezione per partita con il tasto «+» della tabella sopra. La probabilità di vincere è il prodotto di quelle delle singole selezioni.</p>
+        <p id="sNote" class="note"></p>
+        <ul class="res" id="sList"></ul>
+        <div class="row" style="margin-top:10px">
+          <div><label for="sStake">Puntata (€)</label><input class="num" id="sStake" inputmode="decimal" value="10"></div>
+          <div><label for="sBonus">Bonus multipla (%)</label><input class="num" id="sBonus" inputmode="decimal" value="0"></div>
+          <button class="btn ghost" id="sClear" type="button">Svuota</button>
+        </div>
+        <div id="sOut" style="margin-top:12px"></div>
+      </div>
+      <div class="card note">
+        Il margine del bookmaker sulle quote 1X2 è di norma tra il 4% e l'8%: per guadagnare nel lungo periodo serve una stima sistematicamente più accurata del mercato, e nessun modello lo garantisce. Anche con valore positivo la varianza è alta. Punta solo ciò che puoi permetterti di perdere.
+      </div>
+    </div>
+  </section>
+
+  <section id="p-cal" hidden>
+    <div class="card">
+      <h2>Calendario e risultati</h2>
+      <div class="row" style="margin-bottom:12px">
+        <div><label for="selG">Giornata</label><select id="selG"></select></div>
+        <button class="btn ghost" id="gCur" type="button">Turno in corso</button>
+        <button class="btn ghost" id="gNext" type="button">Prossimo turno</button>
+      </div>
+      <div class="scroll"><table id="cal"></table></div>
+      <p class="note" style="margin-bottom:0">Per le partite da giocare, le percentuali sono quelle del modello. «Analizza» apre la partita con le quote e il calcolo della puntata.</p>
+    </div>
+  </section>
+
+  <section id="p-table" hidden>
+    <div class="card">
+      <h2>Classifica</h2>
+      <div class="seg" role="group" aria-label="Vista">
+        <button type="button" data-view="t" aria-pressed="true">Totale</button>
+        <button type="button" data-view="c" aria-pressed="false">Casa</button>
+        <button type="button" data-view="x" aria-pressed="false">Trasferta</button>
+      </div>
+      <div class="scroll"><table id="ct"></table></div>
+      <p class="note" style="margin-bottom:0">G giocate, V vinte, N pareggiate, P perse, GF gol fatti, GS gol subiti, DR differenza reti, Pt punti. Calcolata dai risultati delle partite. Dati aggiornati ogni martedì mattina da <span id="fonte"></span>.</p>
+    </div>
+  </section>
+
+  <section id="p-reg" hidden>
+    <div class="grid">
+      <div class="stack">
+        <div class="card">
+          <h2>I pronostici di Claude</h2>
+          <p class="note" style="margin-top:0">La mattina di ogni giornata di gioco Claude cerca assenti, squalificati e formazioni probabili, poi scrive il pronostico solo sulle partite in cui ha una ragione per farlo; le altre le salta e dice perché. Il pronostico viene bloccato nel momento in cui è scritto, insieme alla previsione del modello puro (solo statistica), così il confronto resta onesto. Quando la partita compare tra i risultati viene corretto da solo.</p>
+          <p id="regMsg" class="msg" hidden></p>
+          <div id="regForm"></div>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <h2>Bilancio</h2>
+          <div id="regStats"></div>
+        </div>
+        <div class="card">
+          <h2>Partite verificate</h2>
+          <div class="scroll"><table id="regDone"></table></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h2>Prova del modello sul passato</h2>
+      <p class="note" style="margin-top:0">Per ogni giornata già giocata il modello viene ricostruito usando solo le partite precedenti e messo alla prova su quelle del turno. È la verifica che puoi fare subito, senza aspettare i turni futuri. Attenzione: i valori iniziali delle squadre sono stime mie fatte con la stagione già in corso, quindi il risultato è un po' più ottimistico del vero.</p>
+      <div id="wf"></div>
+    </div>
+  </section>
+
+  <section id="p-ops" hidden>
+    <div class="card">
+      <h2>Operatori</h2>
+      <p class="note" style="margin-top:0">Ogni volta che inserisci le quote di un operatore, la pagina ne ricorda il margine. Con più partite il confronto diventa affidabile. Margine più basso significa quote più alte a parità di probabilità. I nomi sono quelli dei siti dell'elenco ADM dei concessionari autorizzati.</p>
+      <div class="scroll"><table id="opT"></table></div>
+      <p id="opMsg" class="msg" style="margin-top:12px"></p>
+    </div>
+  </section>
+
+  <section id="p-teams" hidden>
+    <div class="card">
+      <h2>Forza delle squadre</h2>
+      <p class="note" style="margin-top:0">Attacco: gol segnati rispetto a una squadra media (1,00). Difesa: gol subiti rispetto alla media, quindi più basso è meglio. I valori stimati partono dai valori iniziali, che puoi modificare a destra, e vengono corretti con il risultato di ogni partita giocata, tenendo conto della forza degli avversari incontrati. Più partite si giocano, meno pesano i valori iniziali.</p>
+      <div class="scroll"><table id="tt"></table></div>
+      <div class="row" style="margin-top:12px"><button class="btn ghost" id="pReset" type="button">Ripristina i valori iniziali</button></div>
+    </div>
+  </section>
+</div>
+
+
+<script type="module">
+let MU = Math.log(1.20), HOME = 0.20;
+const RHO = -0.06, MAXG = 9;
+
+// a = fattore d'attacco, d = fattore di debolezza difensiva (piu basso = difesa migliore). Valori iniziali stimati.
+const TEAMS = [
+  { n: 'Inter', a: 1.42, d: 0.74, k: ['inter', 'internazionale'] },
+  { n: 'Napoli', a: 1.22, d: 0.86, k: ['napoli'] },
+  { n: 'Juventus', a: 1.16, d: 0.82, k: ['juventus', 'juve'] },
+  { n: 'Milan', a: 1.13, d: 0.86, k: ['milan', 'ac milan'] },
+  { n: 'Roma', a: 1.25, d: 0.84, k: ['roma', 'as roma'] },
+  { n: 'Atalanta', a: 1.22, d: 0.96, k: ['atalanta'] },
+  { n: 'Lazio', a: 1.00, d: 0.95, k: ['lazio'] },
+  { n: 'Bologna', a: 1.00, d: 0.95, k: ['bologna'] },
+  { n: 'Fiorentina', a: 0.95, d: 1.10, k: ['fiorentina', 'fio'] },
+  { n: 'Como', a: 1.16, d: 1.00, k: ['como'] },
+  { n: 'Torino', a: 0.90, d: 1.05, k: ['torino'] },
+  { n: 'Udinese', a: 0.92, d: 1.08, k: ['udinese'] },
+  { n: 'Genoa', a: 0.90, d: 1.02, k: ['genoa'] },
+  { n: 'Cagliari', a: 0.84, d: 1.10, k: ['cagliari'] },
+  { n: 'Parma', a: 0.86, d: 1.12, k: ['parma'] },
+  { n: 'Lecce', a: 0.76, d: 1.12, k: ['lecce'] },
+  { n: 'Sassuolo', a: 0.98, d: 1.12, k: ['sassuolo'] },
+  { n: 'Venezia', a: 0.74, d: 1.25, k: ['venezia'] },
+  { n: 'Frosinone', a: 0.78, d: 1.22, k: ['frosinone'] },
+  { n: 'Monza', a: 0.78, d: 1.22, k: ['monza'] }
+];
+
+function pois(l, k) { let p = Math.exp(-l); for (let i = 1; i <= k; i++) p *= l / i; return p; }
+
+function tau(x, y, lh, la, rho) {
+  if (x === 0 && y === 0) return 1 - lh * la * rho;
+  if (x === 0 && y === 1) return 1 + lh * rho;
+  if (x === 1 && y === 0) return 1 + la * rho;
+  if (x === 1 && y === 1) return 1 - rho;
+  return 1;
+}
+
+function matrix(lh, la) {
+  const m = []; let s = 0;
+  for (let x = 0; x <= MAXG; x++) {
+    m[x] = [];
+    for (let y = 0; y <= MAXG; y++) {
+      const p = pois(lh, x) * pois(la, y) * tau(x, y, lh, la, RHO);
+      m[x][y] = p; s += p;
+    }
+  }
+  for (let x = 0; x <= MAXG; x++) for (let y = 0; y <= MAXG; y++) m[x][y] /= s;
+  return m;
+}
+
+function markets(m, lh, la) {
+  let p1 = 0, pX = 0, p2 = 0, btts = 0;
+  const over = { 1.5: 0, 2.5: 0, 3.5: 0 };
+  const list = [];
+  for (let x = 0; x <= MAXG; x++) for (let y = 0; y <= MAXG; y++) {
+    const p = m[x][y];
+    if (x > y) p1 += p; else if (x === y) pX += p; else p2 += p;
+    if (x > 0 && y > 0) btts += p;
+    for (const k in over) if (x + y > +k) over[k] += p;
+    list.push({ x, y, p });
+  }
+  list.sort((a, b) => b.p - a.p);
+  return { p1, pX, p2, btts, over, top: list.slice(0, 6), lh, la };
+}
+
+// Media gol di casa e trasferta della stagione, con ripiego sui valori storici quando le partite sono poche.
+function setLeague(results) {
+  const W = 40, H0 = 1.47, A0 = 1.20;
+  let sh = 0, sa = 0;
+  results.forEach(r => { sh += r.gh; sa += r.ga; });
+  const n = results.length, H = (sh + W * H0) / (n + W), A = (sa + W * A0) / (n + W);
+  MU = Math.log(A); HOME = Math.log(H / A);
+  return { H, A };
+}
+
+// Stima attacco e difesa (in scala logaritmica) di ogni squadra da tutte le partite giocate, tenendo conto degli
+// avversari incontrati. I valori iniziali agiscono da freno; le partite recenti pesano di piu (emivita di 80 partite).
+function fit(att0, def0, results, sigma, half) {
+  sigma = sigma || 0.25; half = half || 80;
+  const n = att0.length, att = att0.slice(), def = def0.slice(), N = results.length;
+  if (!N) return { att, def };
+  const w = results.map((_, k) => Math.pow(0.5, (N - 1 - k) / half));
+  const s2 = 1 / (sigma * sigma);
+  for (let it = 0; it < 150; it++) {
+    const ga = new Array(n).fill(0), ha = new Array(n).fill(0), gd = new Array(n).fill(0), hd = new Array(n).fill(0);
+    results.forEach((r, k) => {
+      const lh = Math.exp(MU + HOME + att[r.h] + def[r.a]);
+      const la = Math.exp(MU + att[r.a] + def[r.h]);
+      const eh = w[k] * (r.gh - lh), ea = w[k] * (r.ga - la);
+      ga[r.h] += eh; ha[r.h] += w[k] * lh; gd[r.a] += eh; hd[r.a] += w[k] * lh;
+      ga[r.a] += ea; ha[r.a] += w[k] * la; gd[r.h] += ea; hd[r.h] += w[k] * la;
+    });
+    for (let i = 0; i < n; i++) {
+      att[i] += 0.6 * (ga[i] - (att[i] - att0[i]) * s2) / (ha[i] + s2);
+      def[i] += 0.6 * (gd[i] - (def[i] - def0[i]) * s2) / (hd[i] + s2);
+    }
+  }
+  return { att, def };
+}
+
+function predict(att, def, h, a) {
+  const lh = Math.exp(MU + HOME + att[h] + def[a]);
+  const la = Math.exp(MU + att[a] + def[h]);
+  const m = matrix(lh, la);
+  return { m, mk: markets(m, lh, la) };
+}
+
+function kelly(p, o, frac, cap) {
+  const f = (p * o - 1) / (o - 1);
+  if (!(f > 0)) return 0;
+  return Math.min(f * frac, cap);
+}
+
+if (typeof module !== 'undefined') module.exports = { TEAMS, setLeague, fit, predict, kelly };
+
+
+const $ = id => document.getElementById(id);
+const ix = n => TEAMS.findIndex(t => t.n === n);
+const fmt = (x, d = 2) => x.toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+const pct = (x, d = 1) => fmt(x * 100, d) + '%';
+const eur = x => x.toLocaleString('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+const eur2 = x => x.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' });
+const num = id => parseFloat(String($(id).value).replace(',', '.'));
+
+const getJ = async p => { try { const r = await fetch(p + '?t=' + Date.now()); return r.ok ? await r.json() : null; } catch (e) { return null; } };
+const DATA = await getJ('data/dati.json');
+const FEEDJ = await getJ('data/quote.json');
+const PRONJ = await getJ('data/pronostici.json');
+if (!DATA) { document.body.innerHTML = '<p style="padding:24px;font-family:sans-serif">Impossibile caricare data/dati.json.</p>'; throw new Error('no data'); }
+const played = DATA.risultati.map(r => ({ g: r[0], h: ix(r[1]), gh: r[2], ga: r[3], a: ix(r[4]) })).filter(r => r.h >= 0 && r.a >= 0);
+const fixtures = DATA.calendario.map(f => ({ g: f[0], h: ix(f[1]), a: ix(f[2]), when: f[3] })).filter(f => f.h >= 0 && f.a >= 0);
+const zero = () => ({ g: 0, v: 0, n: 0, p: 0, gf: 0, gs: 0 });
+const rows = TEAMS.map(t => ({ n: t.n, c: zero(), t: zero() }));
+function add(o, f, s) { o.g++; o.gf += f; o.gs += s; if (f > s) o.v++; else if (f === s) o.n++; else o.p++; }
+played.forEach(r => { add(rows[r.h].c, r.gh, r.ga); add(rows[r.a].t, r.ga, r.gh); });
+const CUR = DATA.giornata_in_corso || 1;
+const NGIOR = Math.max(CUR + 1, ...played.map(r => r.g), ...fixtures.map(f => f.g));
+let priorsA = TEAMS.map(t => t.a), priorsD = TEAMS.map(t => t.d);
+let L = null, view = 't';
+let SIGMA = 0.25;
+try { const sg = parseFloat(localStorage.getItem('pronostici-sigma-26')); if (sg > 0.05 && sg < 2) SIGMA = sg; } catch (e) {}
+
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem('pronostici-serie-a-26b') || 'null');
+    if (s && Array.isArray(s.pa) && s.pa.length === TEAMS.length) { priorsA = s.pa; priorsD = s.pd; }
+  } catch (e) {}
+}
+function save() { try { localStorage.setItem('pronostici-serie-a-26b', JSON.stringify({ pa: priorsA, pd: priorsD })); } catch (e) {} }
+function refit() {
+  const lg = setLeague(played);
+  const f = fit(priorsA.map(Math.log), priorsD.map(Math.log), played, SIGMA);
+  L = { att: f.att, def: f.def, H: lg.H, A: lg.A };
+}
+
+function fillSelects() {
+  const opts = TEAMS.map((t, i) => `<option value="${i}">${t.n}</option>`).join('');
+  ['selH', 'selA'].forEach(id => $(id).innerHTML = opts);
+  const f0 = fixtures.find(f => f.g === CUR + 1) || fixtures[0];
+  $('selH').value = f0 ? f0.h : ix('Napoli'); $('selA').value = f0 ? f0.a : ix('Inter');
+}
+
+function renderStato() {
+  const d = new Date(DATA.aggiornato + 'T12:00:00');
+  $('stato').textContent = `Risultati aggiornati al ${d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}: ${played.length} partite giocate, turno in corso la ${CUR}ª giornata. Media gol: ${fmt(L.H)} in casa, ${fmt(L.A)} in trasferta.`;
+  $('fonte').textContent = DATA.fonte;
+}
+
+function renderPick() {
+  const h = +$('selH').value, a = +$('selA').value;
+  const group = (title, list) => !list.length ? '' :
+    `<p class="pg">${title}</p><div class="chips">` + list.map(f => {
+      const { mk } = predict(L.att, L.def, f.h, f.a);
+      return `<button class="chip" type="button" data-pick="${f.h},${f.a}" aria-pressed="${f.h === h && f.a === a}">` +
+        `<b>${TEAMS[f.h].n} – ${TEAMS[f.a].n}</b><span>${f.when || 'da giocare'}</span>` +
+        `<span>1 ${pct(mk.p1, 0)} · X ${pct(mk.pX, 0)} · 2 ${pct(mk.p2, 0)}</span></button>`;
+    }).join('') + '</div>';
+  const cur = fixtures.filter(f => f.g === CUR), nxt = fixtures.filter(f => f.g === CUR + 1);
+  $('pick').innerHTML = group(`Turno in corso · ${CUR}ª giornata`, cur) + group(`Prossimo turno · ${CUR + 1}ª giornata`, nxt) ||
+    '<p class="note">Nessuna partita da giocare nei dati disponibili.</p>';
+}
+
+function renderMatch() {
+  renderPick();
+  const h = +$('selH').value, a = +$('selA').value;
+  $('nameH').textContent = TEAMS[h].n; $('nameA').textContent = TEAMS[a].n;
+  if (h === a) {
+    $('xg').textContent = '—'; $('bar').innerHTML = ''; $('fair').innerHTML = '';
+    $('mk').innerHTML = ''; $('heat').innerHTML = ''; $('top').innerHTML = ''; $('ev').innerHTML = '';
+    $('evmsg').textContent = 'Scegli due squadre diverse.';
+    return;
+  }
+  const { m, mk } = predict(L.att, L.def, h, a);
+  $('xg').textContent = fmt(mk.lh) + ' – ' + fmt(mk.la);
+  $('bar').innerHTML = `<div class="h" style="flex:${mk.p1}">1 · ${pct(mk.p1, 0)}</div><div class="d" style="flex:${mk.pX}">X · ${pct(mk.pX, 0)}</div><div class="a" style="flex:${mk.p2}">2 · ${pct(mk.p2, 0)}</div>`;
+  $('fair').innerHTML = [mk.p1, mk.pX, mk.p2].map(p => `<div class="mono">quota equa ${fmt(1 / p)}</div>`).join('');
+
+  const mr = [
+    ['Doppia chance 1X', mk.p1 + mk.pX], ['Doppia chance X2', mk.pX + mk.p2], ['Doppia chance 12', mk.p1 + mk.p2],
+    ['Over 1,5', mk.over[1.5]], ['Under 1,5', 1 - mk.over[1.5]],
+    ['Over 2,5', mk.over[2.5]], ['Under 2,5', 1 - mk.over[2.5]],
+    ['Over 3,5', mk.over[3.5]], ['Under 3,5', 1 - mk.over[3.5]],
+    ['Gol (entrambe segnano)', mk.btts], ['NoGol', 1 - mk.btts]
+  ];
+  $('mk').innerHTML = '<tr><th>Mercato</th><th class="n">Probabilità</th><th class="n">Quota equa</th></tr>' +
+    mr.map(r => `<tr><td>${r[0]}</td><td class="n">${pct(r[1])}</td><td class="n">${fmt(1 / r[1])}</td></tr>`).join('');
+
+  let best = { p: -1 }, cells = '<div></div>' + [0, 1, 2, 3, 4, 5].map(j => `<div class="hd">${j}</div>`).join('');
+  for (let x = 0; x < 6; x++) for (let y = 0; y < 6; y++) if (m[x][y] > best.p) best = { p: m[x][y], x, y };
+  for (let x = 0; x < 6; x++) {
+    cells += `<div class="hd">${x}</div>`;
+    for (let y = 0; y < 6; y++) {
+      const p = m[x][y], k = Math.min(100, Math.round(p / best.p * 85));
+      cells += `<div class="c${x === best.x && y === best.y ? ' top' : ''}" style="background:color-mix(in srgb, var(--accent) ${k}%, var(--bg));${k > 55 ? 'color:var(--accent-ink)' : ''}">${fmt(p * 100, 1)}</div>`;
+    }
+  }
+  $('heat').innerHTML = cells;
+  $('top').innerHTML = '<tr><th>Risultato</th><th class="n">Prob.</th><th class="n">Quota equa</th></tr>' +
+    mk.top.map(t => `<tr><td class="mono">${t.x} - ${t.y}</td><td class="n">${pct(t.p)}</td><td class="n">${fmt(1 / t.p)}</td></tr>`).join('');
+
+  renderEv(mk, m);
+}
+
+const MORE = [
+  ['o1X', '1X'], ['oX2', 'X2'], ['o12', '12'],
+  ['m12', 'Multigol 1-2'], ['m13', 'Multigol 1-3'], ['m14', 'Multigol 1-4'], ['m23', 'Multigol 2-3'], ['m24', 'Multigol 2-4'], ['m25', 'Multigol 2-5'], ['m35', 'Multigol 3-5'],
+  ['c1U', '1 + Under 2,5'], ['c1O', '1 + Over 2,5'], ['cXU', 'X + Under 2,5'], ['cXO', 'X + Over 2,5'], ['c2U', '2 + Under 2,5'], ['c2O', '2 + Over 2,5']
+];
+const ALLIDS = ['o1', 'oX', 'o2', 'oU', 'oO', 'oG', 'oN', ...MORE.map(x => x[0])];
+const LABEL = { o1: '1', oX: 'X', o2: '2', oU: 'Under 2,5', oO: 'Over 2,5', oG: 'Gol', oN: 'NoGol' };
+MORE.forEach(x => LABEL[x[0]] = x[1]);
+const GROUPS = [
+  { name: '1X2', ids: ['o1', 'oX', 'o2'] },
+  { name: 'Under/Over 2,5', ids: ['oU', 'oO'] },
+  { name: 'Gol/NoGol', ids: ['oG', 'oN'] },
+  { name: 'Combo 1X2 + U/O 2,5', ids: ['c1U', 'c1O', 'cXU', 'cXO', 'c2U', 'c2O'] }
+];
+const SINGLES = [['Doppia chance', ['o1X', 'oX2', 'o12']], ['Multigol', ['m12', 'm13', 'm14', 'm23', 'm24', 'm25', 'm35']]];
+const MARGINE_STIMATO = 0.08;
+const OPS = ['SNAI', 'Eurobet', 'Goldbet', 'Lottomatica', 'Sisal', 'bet365', 'Betsson', 'Starcasino', 'Planetwin365', 'William Hill', 'Betflag', 'Admiralbet', 'DAZN Bet', 'Netwin', 'Vincitù', 'Stake', 'Marathonbet', 'Codere', 'bwin', 'Betfair (exchange)', 'Sportium', 'Betwin360', 'StarVegas', 'Quigioco', 'Domusbet', 'Sportbet', 'Betpoint', 'Winamax', 'Totosì', 'Netbet', 'Betpassion', 'Stanleybet', 'LeoVegas', 'Sunbet', 'Fastbet', 'Elabet', 'Betitaly', 'Staryes', 'Winbet', '888', 'PokerStars'];
+const FEED = {}; let feedNote = '';
+(function () {
+  if (!FEEDJ) return;
+  const OPN = { 'snai.it': 'SNAI', 'sisal.it': 'Sisal', 'eurobet.it': 'Eurobet', 'goldbet.it': 'Goldbet' };
+  const IDM = { '1': 'o1', 'X': 'oX', '2': 'o2', 'G': 'oG', 'N': 'oN', 'O25': 'oO', 'U25': 'oU' };
+  (FEEDJ.partite || []).forEach(p => {
+    const h = ix(p.casa), a = ix(p.trasf); if (h < 0 || a < 0) return;
+    const k = h + '-' + a; FEED[k] = {};
+    Object.keys(p.quote || {}).forEach(sl => {
+      if (!OPN[sl]) return; const o = FEED[k][OPN[sl]] = {};
+      Object.keys(IDM).forEach(x => { const v = p.quote[sl][x]; if (v > 1) o[IDM[x]] = String(v).replace('.', ','); });
+    });
+  });
+  try { feedNote = 'Quote automatiche aggiornate il ' + new Date(FEEDJ.aggiornato).toLocaleString('it-IT', { dateStyle: 'short', timeStyle: 'short' }) + ' (fonte ' + FEEDJ.fonte + '). SNAI e Sisal risultano identiche perché SNAI è un clone di Sisal nel servizio. Possono essere in ritardo: ricontrolla sul sito prima di giocare.'; } catch (e) {}
+})();
+const qOf = (key, op) => Object.assign({}, (FEED[key] || {})[op], (Q[key] || {})[op]);
+let Q = {}, opActive = 'SNAI', slip = [], lastRows = [], matchLabel = '';
+
+function loadQ() {
+  try {
+    const x = JSON.parse(localStorage.getItem('pronostici-quote-26') || 'null');
+    if (x && x.Q) Q = x.Q;
+    if (x && OPS.includes(x.op)) opActive = x.op;
+  } catch (e) {}
+}
+function saveQ() { try { localStorage.setItem('pronostici-quote-26', JSON.stringify({ Q, op: opActive })); } catch (e) {} }
+const matchKey = () => $('selH').value + '-' + $('selA').value;
+function parseO(key, op, id) {
+  const q = qOf(key, op);
+  if (q[id] === undefined) return NaN;
+  return parseFloat(String(q[id]).replace(',', '.'));
+}
+function loadInputs() {
+  const q = qOf(matchKey(), opActive), mine = (Q[matchKey()] || {})[opActive] || {};
+  ALLIDS.forEach(id => { $(id).value = q[id] !== undefined ? q[id] : ''; $(id).style.background = (q[id] !== undefined && mine[id] === undefined) ? 'color-mix(in srgb, var(--accent) 12%, transparent)' : ''; });
+  const fm = $('feedMsg'); if (fm) { const has = !!((FEED[matchKey()] || {})[opActive]); fm.textContent = has ? 'Quote di ' + opActive + ' caricate in automatico (campi evidenziati). ' + feedNote : (FEEDJ ? 'Nessuna quota automatica per questa partita/operatore: inseriscile a mano. ' : ''); }
+  $('selOp').value = opActive;
+}
+function storeInput(id) {
+  const key = matchKey(), v = String($(id).value).trim();
+  Q[key] = Q[key] || {}; Q[key][opActive] = Q[key][opActive] || {};
+  if (v === '') delete Q[key][opActive][id]; else Q[key][opActive][id] = v;
+  if (!Object.keys(Q[key][opActive]).length) delete Q[key][opActive];
+  if (!Object.keys(Q[key]).length) delete Q[key];
+  saveQ();
+}
+const opsWithData = key => [...new Set([...Object.keys(Q[key] || {}), ...Object.keys(FEED[key] || {})])].filter(op => ALLIDS.some(id => parseO(key, op, id) > 1));
+function groupMargin(key, op, g) {
+  const od = g.ids.map(id => parseO(key, op, id));
+  return od.every(o => o > 1) ? od.reduce((t, o) => t + 1 / o, 0) - 1 : null;
+}
+
+function allMarkets(m, mk) {
+  const P = f => { let t = 0; for (let x = 0; x <= MAXG; x++) for (let y = 0; y <= MAXG; y++) if (f(x, y)) t += m[x][y]; return t; };
+  const mg = (a, b) => P((x, y) => x + y >= a && x + y <= b);
+  return {
+    o1: mk.p1, oX: mk.pX, o2: mk.p2, oU: 1 - mk.over[2.5], oO: mk.over[2.5], oG: mk.btts, oN: 1 - mk.btts,
+    o1X: mk.p1 + mk.pX, oX2: mk.pX + mk.p2, o12: mk.p1 + mk.p2,
+    m12: mg(1, 2), m13: mg(1, 3), m14: mg(1, 4), m23: mg(2, 3), m24: mg(2, 4), m25: mg(2, 5), m35: mg(3, 5),
+    c1U: P((x, y) => x > y && x + y < 3), c1O: P((x, y) => x > y && x + y >= 3),
+    cXU: P((x, y) => x === y && x + y < 3), cXO: P((x, y) => x === y && x + y >= 3),
+    c2U: P((x, y) => x < y && x + y < 3), c2O: P((x, y) => x < y && x + y >= 3)
+  };
+}
+
+function opRows(key, op, PR, w) {
+  const rows = [], margins = [];
+  GROUPS.forEach(g => {
+    const od = g.ids.map(id => parseO(key, op, id));
+    const ok = od.every(o => o > 1);
+    const sumInv = ok ? od.reduce((t, o) => t + 1 / o, 0) : 0;
+    if (ok) margins.push(`${g.name}: ${fmt((sumInv - 1) * 100, 1)}%`);
+    g.ids.forEach((id, i) => {
+      const o = od[i]; if (!(o > 1)) return;
+      const mkt = ok ? (1 / o) / sumInv : (1 / o) / (1 + MARGINE_STIMATO);
+      rows.push({ id, op, grp: g.name, label: LABEL[id], o, p: w * PR[id] + (1 - w) * mkt, est: !ok });
+    });
+  });
+  SINGLES.forEach(([name, ids]) => ids.forEach(id => {
+    const o = parseO(key, op, id); if (!(o > 1)) return;
+    rows.push({ id, op, grp: name, label: LABEL[id], o, p: w * PR[id] + (1 - w) * (1 / o) / (1 + MARGINE_STIMATO), est: true });
+  }));
+  return { rows, margins };
+}
+
+function bestRows(key, ops, PR, w) {
+  const out = [];
+  const ids = [...GROUPS.flatMap(g => g.ids), ...SINGLES.flatMap(s => s[1])];
+  ids.forEach(id => {
+    const c = ops.map(op => ({ op, o: parseO(key, op, id) })).filter(x => x.o > 1).sort((a, b) => b.o - a.o);
+    if (!c.length) return;
+    const g = GROUPS.find(x => x.ids.includes(id)), sg = SINGLES.find(x => x[1].includes(id));
+    const pms = [];
+    if (g) ops.forEach(op => {
+      const od = g.ids.map(i => parseO(key, op, i));
+      if (od.every(o => o > 1)) pms.push((1 / od[g.ids.indexOf(id)]) / od.reduce((t, o) => t + 1 / o, 0));
+    });
+    const est = pms.length === 0;
+    const pm = est ? (1 / c[0].o) / (1 + MARGINE_STIMATO) : pms.reduce((t, x) => t + x, 0) / pms.length;
+    out.push({ id, op: c[0].op, grp: g ? g.name : sg[0], label: LABEL[id], o: c[0].o, p: w * PR[id] + (1 - w) * pm, est,
+      others: c.slice(1).map(x => x.op + ' ' + fmt(x.o)).join(' · ') });
+  });
+  return out;
+}
+
+function renderEv(mk, m) {
+  const w = +$('trust').value / 100;
+  $('trustv').textContent = Math.round(w * 100) + '%';
+  const bank = num('bank') || 0, frac = +$('kf').value, minEv = (num('minev') || 0) / 100;
+  const PR = allMarkets(m, mk), key = matchKey();
+  const sim = num('sim') > 0 ? num('sim') : 0;
+  matchLabel = TEAMS[+$('selH').value].n + ' – ' + TEAMS[+$('selA').value].n;
+  const ops = opsWithData(key);
+  $('opChips').innerHTML = ops.map(op => {
+    const mg = groupMargin(key, op, GROUPS[0]);
+    return `<button class="chip" type="button" data-op="${op}" aria-pressed="${op === opActive}"><b>${op}</b><span>${mg === null ? 'quote parziali' : 'margine 1X2 ' + fmt(mg * 100, 1) + '%'}</span></button>`;
+  }).join('');
+  const act = opRows(key, opActive, PR, w);
+  const best = ops.length >= 2 ? bestRows(key, ops, PR, w) : [];
+  const all = act.rows.concat(best);
+  all.forEach(r => {
+    r.ev = r.p * r.o - 1;
+    r.stake = bank * kelly(r.p, r.o, frac, 0.05);
+    r.isVal = r.ev >= minEv && r.stake > 0;
+  });
+  lastRows = all;
+  const rowHtml = (r, i, withOp) => `<tr class="${r.isVal ? 'val' : ''}"><td>${r.grp === '1X2' ? '' : r.grp + ' · '}${r.label}${r.est ? ' *' : ''} ${r.isVal ? '<span class="pill">valore</span>' : ''}</td>` +
+    `<td class="n">${fmt(r.o)}</td>` + (withOp ? `<td>${r.op}${r.others ? `<br><span class="note">${r.others}</span>` : ''}</td>` : '') +
+    `<td class="n">${pct(r.p)}</td><td class="n ${r.ev < 0 ? 'neg' : ''}">${r.ev >= 0 ? '+' : ''}${fmt(r.ev * 100, 1)}%</td>` +
+    `<td class="n">${eur2(sim * r.o)}<br><span class="note">utile ${eur2(sim * (r.o - 1))}</span></td><td class="n">${r.isVal ? eur(r.stake) : '—'}</td><td><button class="add" type="button" data-add="${i}" aria-label="Aggiungi alla schedina">+</button></td></tr>`;
+  const head = withOp => `<tr><th>Mercato</th><th class="n">Quota</th>${withOp ? '<th>Operatore</th>' : ''}<th class="n">Prob. usata</th><th class="n">Valore</th><th class="n">Vincita con ${eur2(sim)}</th><th class="n">Puntata suggerita</th><th></th></tr>`;
+  $('evOp').textContent = 'Quote di ' + opActive;
+  $('ev').innerHTML = act.rows.length ? head(false) + act.rows.map((r, i) => rowHtml(r, i, false)).join('') : '';
+  $('bestWrap').hidden = !best.length;
+  $('evb').innerHTML = best.length ? head(true) + best.map((r, i) => rowHtml(r, act.rows.length + i, true)).join('') : '';
+  const shown = best.length ? best : act.rows;
+  const nVal = shown.filter(r => r.isVal).length;
+  const anyEst = shown.some(r => r.est);
+  $('evmsg').innerHTML = !shown.length
+    ? `Inserisci le quote di ${opActive} per questa partita. Senza quote non si può dire se c'è valore.`
+    : (nVal
+      ? `${best.length ? 'Tra gli operatori inseriti' : 'Con queste quote'} ${nVal === 1 ? 'c\'è 1 giocata' : 'ci sono ' + nVal + ' giocate'} sopra la soglia di valore. La puntata è il criterio di Kelly frazionato, con tetto al 5% del capitale.`
+      : 'Nessuna giocata supera la soglia di valore con queste quote. Non puntare è un risultato valido.') +
+    (act.margins.length ? `<br><span class="note">Margine di ${opActive}, ${act.margins.join(' · ')}.</span>` : '') +
+    (anyEst ? `<br><span class="note">* Manca il resto del mercato: per togliere il margine ho ipotizzato l'${Math.round(MARGINE_STIMATO * 100)}%. Nei mercati secondari il margine reale è spesso più alto, quindi il valore è sovrastimato.</span>` : '');
+}
+
+function renderOps() {
+  const st = {};
+  [...new Set([...Object.keys(Q), ...Object.keys(FEED)])].forEach(key => {
+    const ops = opsWithData(key);
+    ops.forEach(op => {
+      const s = st[op] = st[op] || { n: 0, m: [[], [], []], best: 0, comp: 0 };
+      s.n++;
+      GROUPS.slice(0, 3).forEach((g, i) => { const mg = groupMargin(key, op, g); if (mg !== null) s.m[i].push(mg); });
+    });
+    if (ops.length >= 2) ALLIDS.forEach(id => {
+      const c = ops.map(op => ({ op, o: parseO(key, op, id) })).filter(x => x.o > 1);
+      if (c.length < 2) return;
+      const mx = Math.max(...c.map(x => x.o));
+      c.forEach(x => { st[x.op].comp++; if (x.o === mx) st[x.op].best++; });
+    });
+  });
+  const avg = a => a.length ? a.reduce((t, x) => t + x, 0) / a.length : null;
+  const list = Object.keys(st).map(op => ({ op, n: st[op].n, a: st[op].m.map(avg), k: st[op].m[0].length, best: st[op].best, comp: st[op].comp }))
+    .sort((x, y) => (x.a[0] === null) - (y.a[0] === null) || (x.a[0] || 0) - (y.a[0] || 0));
+  const f = v => v === null ? '—' : fmt(v * 100, 1) + '%';
+  $('opT').innerHTML = list.length
+    ? '<tr><th>Operatore</th><th class="n">Partite</th><th class="n">Margine 1X2</th><th class="n">Margine U/O</th><th class="n">Margine Gol</th><th class="n">Quota migliore</th></tr>' +
+      list.map(r => `<tr><td>${r.op}</td><td class="n">${r.n}</td><td class="n">${f(r.a[0])}</td><td class="n">${f(r.a[1])}</td><td class="n">${f(r.a[2])}</td><td class="n">${r.comp ? r.best + ' su ' + r.comp : '—'}</td></tr>`).join('')
+    : '<tr><td class="note">Nessuna quota inserita finora. Inserisci le quote nella scheda Partita.</td></tr>';
+  const ok = list.filter(r => r.k >= 3 && r.a[0] !== null);
+  $('opMsg').textContent = ok.length >= 2
+    ? `Per ora ${ok[0].op} ha il margine 1X2 medio più basso (${f(ok[0].a[0])} su ${ok[0].k} partite), seguito da ${ok[1].op} (${f(ok[1].a[0])}). Con pochi dati la classifica può cambiare: guarda anche quante volte un operatore ha la quota migliore.`
+    : 'Servono almeno 2 operatori con 3 partite ciascuno, con le quote 1X2 complete, per dare un consiglio basato sui dati.';
+}
+
+function renderSlip() {
+  $('sOp').textContent = slip.length ? ' · ' + slip[0].op : '';
+  $('sList').innerHTML = slip.map((s, i) =>
+    `<li><span>${s.match}<br><span class="note">${s.grp === '1X2' ? '' : s.grp + ' · '}${s.label} @ ${fmt(s.o)} · prob. ${pct(s.p)}</span></span><button type="button" data-rm="${i}" aria-label="Rimuovi">×</button></li>`).join('') ||
+    '<li class="note">La schedina è vuota.</li>';
+  if (slip.length < 1) { $('sOut').innerHTML = ''; return; }
+  const O = slip.reduce((t, s) => t * s.o, 1), Pw = slip.reduce((t, s) => t * s.p, 1);
+  const b = slip.length >= 2 ? (num('sBonus') || 0) / 100 : 0, st = num('sStake') || 0, bank = num('bank') || 0, frac = +$('kf').value;
+  const Oeff = 1 + (O - 1) * (1 + b);
+  const ev0 = Pw * O - 1, ev1 = Pw * Oeff - 1;
+  const sug = bank * kelly(Pw, Oeff, frac, 0.05);
+  const sg = x => (x >= 0 ? '+' : '') + fmt(x * 100, 1) + '%';
+  $('sOut').innerHTML = `<dl class="kv">
+    <dt>Selezioni</dt><dd>${slip.length}</dd>
+    <dt>Quota totale</dt><dd>${fmt(O)}</dd>
+    ${b > 0 ? `<dt>Quota con bonus</dt><dd>${fmt(Oeff)}</dd>` : ''}
+    <dt>Probabilità di vincere</dt><dd>${pct(Pw)}</dd>
+    <dt>Vincita potenziale</dt><dd>${eur2(st * Oeff)}</dd>
+    <dt>Utile netto se vinci</dt><dd>${eur2(st * (Oeff - 1))}</dd>
+    <dt>Valore atteso senza bonus</dt><dd class="${ev0 < 0 ? 'neg' : ''}">${sg(ev0)}</dd>
+    ${b > 0 ? `<dt>Valore atteso con bonus</dt><dd class="${ev1 < 0 ? 'neg' : ''}">${sg(ev1)}</dd>` : ''}
+    <dt>Puntata suggerita</dt><dd>${sug > 0 ? eur(sug) : '—'}</dd></dl>
+    <p class="note" style="margin:10px 0 0">${slip.length < 2 ? 'Con una sola selezione è una singola.' : 'In una multipla i margini del bookmaker di ogni selezione si moltiplicano.'} Il bonus vale solo per le multiple e di solito da un numero minimo di eventi (per esempio 5), con quota minima per evento: controlla il regolamento dell'operatore. Qui è calcolato sulla vincita netta. Le selezioni conservano quota e probabilità del momento in cui le hai aggiunte.</p>`;
+}
+
+function addToSlip(i) {
+  const r = lastRows[i]; if (!r) return;
+  let note = '';
+  if (slip.length && slip[0].op !== r.op) { note = `Una schedina si gioca su un solo operatore: ho svuotato quella di ${slip[0].op}.`; slip = []; }
+  slip = slip.filter(x => x.match !== matchLabel);
+  slip.push({ match: matchLabel, grp: r.grp, label: r.label, o: r.o, p: r.p, op: r.op });
+  $('sNote').textContent = note;
+  renderSlip();
+}
+
+function changeMatch() { loadInputs(); renderMatch(); }
+
+function renderTable() {
+  const sum = (a, b) => ({ g: a.g + b.g, v: a.v + b.v, n: a.n + b.n, p: a.p + b.p, gf: a.gf + b.gf, gs: a.gs + b.gs });
+  const list = rows.map(r => {
+    const s = view === 'c' ? r.c : view === 'x' ? r.t : sum(r.c, r.t);
+    return { sq: r.n, g: s.g, v: s.v, d: s.n, p: s.p, gf: s.gf, gs: s.gs, dr: s.gf - s.gs, pt: s.v * 3 + s.n };
+  }).sort((a, b) => b.pt - a.pt || b.dr - a.dr || b.gf - a.gf);
+  const sgn = x => (x > 0 ? '+' : '') + x;
+  $('ct').innerHTML = '<tr><th class="n">#</th><th>Squadra</th><th class="n">G</th><th class="n">V</th><th class="n">N</th><th class="n">P</th><th class="n">GF</th><th class="n">GS</th><th class="n">DR</th><th class="n">Pt</th></tr>' +
+    list.map((r, i) => `<tr><td class="n">${i + 1}</td><td>${r.sq}</td><td class="n">${r.g}</td><td class="n">${r.v}</td><td class="n">${r.d}</td><td class="n">${r.p}</td><td class="n">${r.gf}</td><td class="n">${r.gs}</td><td class="n">${sgn(r.dr)}</td><td class="n"><b>${r.pt}</b></td></tr>`).join('');
+}
+
+function renderCal() {
+  const g = +$('selG').value;
+  const ps = played.filter(r => r.g === g), fs = fixtures.filter(f => f.g === g);
+  let html = '<tr><th>Casa</th><th>Trasferta</th><th class="n">Risultato / quando</th><th class="n">1</th><th class="n">X</th><th class="n">2</th><th class="n">Over 2,5</th><th></th></tr>';
+  ps.forEach(r => {
+    html += `<tr><td>${TEAMS[r.h].n}</td><td>${TEAMS[r.a].n}</td><td class="n"><b>${r.gh} - ${r.ga}</b></td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td></td></tr>`;
+  });
+  fs.forEach(f => {
+    const { mk } = predict(L.att, L.def, f.h, f.a);
+    html += `<tr><td>${TEAMS[f.h].n}</td><td>${TEAMS[f.a].n}</td><td class="n">${f.when || 'da giocare'}</td>` +
+      `<td class="n">${pct(mk.p1, 0)}</td><td class="n">${pct(mk.pX, 0)}</td><td class="n">${pct(mk.p2, 0)}</td><td class="n">${pct(mk.over[2.5], 0)}</td>` +
+      `<td><button class="btn ghost" type="button" data-an="${f.h},${f.a}">Analizza</button></td></tr>`;
+  });
+  if (!ps.length && !fs.length) html += '<tr><td colspan="8" class="note">Nessuna partita disponibile per questa giornata.</td></tr>';
+  $('cal').innerHTML = html;
+}
+
+function showTab(t) {
+  document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-selected', x.dataset.tab === t));
+  ['match', 'cal', 'table', 'reg', 'ops', 'teams'].forEach(k => $('p-' + k).hidden = k !== t);
+  if (t === 'reg') renderWalk();
+}
+
+function renderTeams() {
+  const order = TEAMS.map((_, i) => i).sort((a, b) => (L.att[b] - L.def[b]) - (L.att[a] - L.def[a]));
+  $('tt').innerHTML = '<tr><th>Squadra</th><th class="n">Attacco</th><th class="n">Difesa</th><th class="n">Attacco iniziale</th><th class="n">Difesa iniziale</th></tr>' +
+    order.map(i => `<tr><td>${TEAMS[i].n}</td><td class="n">${fmt(Math.exp(L.att[i]))}</td><td class="n">${fmt(Math.exp(L.def[i]))}</td>` +
+      `<td class="n"><input type="number" step="0.01" min="0.3" max="2.5" id="pa${i}" data-pa="${i}" value="${priorsA[i].toFixed(2)}" aria-label="Attacco iniziale ${TEAMS[i].n}"></td>` +
+      `<td class="n"><input type="number" step="0.01" min="0.3" max="2.5" id="pd${i}" data-pd="${i}" value="${priorsD[i].toFixed(2)}" aria-label="Difesa iniziale ${TEAMS[i].n}"></td></tr>`).join('');
+}
+
+
+/* ===== Registro dei pronostici ===== */
+const REGKEY = 'pronostici-registro-26';
+let REG = {}, dbc = null, firstSnap = true;
+const rid = f => f.g + '_' + TEAMS[f.h].n + '_' + TEAMS[f.a].n;
+const outc = (x, y) => x > y ? '1' : x === y ? 'X' : '2';
+function loadReg() { try { REG = JSON.parse(localStorage.getItem(REGKEY) || '{}') || {}; } catch (e) { REG = {}; } }
+function saveRegLocal() { try { localStorage.setItem(REGKEY, JSON.stringify(REG)); } catch (e) {} }
+function regNote(t) { const m = $('regMsg'); m.hidden = !t; m.textContent = t || ''; }
+function initDb() { if (PRONJ) { REG = PRONJ; renderReg(); } }
+function snapshotModel(h, a) {
+  const { mk } = predict(L.att, L.def, h, a), t = mk.top[0];
+  return { p1: +mk.p1.toFixed(4), pX: +mk.pX.toFixed(4), p2: +mk.p2.toFixed(4), lh: +mk.lh.toFixed(3), la: +mk.la.toFixed(3),
+    o25: +mk.over[2.5].toFixed(4), gg: +mk.btts.toFixed(4), tx: t.x, ty: t.y, tp: +t.p.toFixed(4) };
+}
+const modLine = m => `Modello · 1 ${pct(m.p1, 0)} · X ${pct(m.pX, 0)} · 2 ${pct(m.p2, 0)} · risultato più probabile ${m.tx}-${m.ty} (${pct(m.tp, 0)}) · gol attesi ${fmt(m.lh, 1)}–${fmt(m.la, 1)}`;
+
+function renderRegForm() {
+  const gs = [...new Set(fixtures.map(f => f.g))].sort((a, b) => a - b);
+  if (!gs.length) { $('regForm').innerHTML = '<p class="note">Nessuna partita da giocare nei dati disponibili.</p>'; return; }
+  $('regForm').innerHTML = gs.map(g => `<p class="pg">${g}ª giornata</p>` + fixtures.filter(f => f.g === g).map(f => {
+    const r = REG[rid(f)];
+    let body;
+    if (!r) body = '<p class="note small" style="margin:0">Ancora nessun pronostico: viene scritto la mattina del giorno della partita.</p>';
+    else if (r.skip) body = `<p class="small" style="margin:0"><b>Partita saltata.</b> ${esc(r.note || '')}</p>`;
+    else body = `<p style="margin:0"><span class="badge">bloccato</span> <b>Esito ${esc(r.pe)}</b>${r.sh != null ? ' · risultato <b>' + r.sh + '-' + r.sa + '</b>' : ''}${r.p ? ' · fiducia ' + pct(r.p, 0) : ''}</p>` +
+      (r.note ? `<p class="small" style="margin:6px 0 0">${esc(r.note)}</p>` : '') + (r.mod ? `<div class="mod" style="margin:8px 0 0">${modLine(r.mod)}</div>` : '');
+    return `<div class="pm${r && !r.skip ? ' saved' : ''}"><div class="top"><h3>${TEAMS[f.h].n} – ${TEAMS[f.a].n}</h3><span class="note small">${f.when || 'da giocare'}</span></div>${body}</div>`;
+  }).join('')).join('');
+}
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function grade(r, res) {
+  const gh = res.gh, ga = res.ga, tot = gh + ga, o = outc(gh, ga), m = r.mod, hasS = r.sh != null && r.sa != null;
+  const mp = m.p1 >= m.pX && m.p1 >= m.p2 ? '1' : m.p2 >= m.pX ? '2' : 'X';
+  const g = { o, mp, tot, gh, ga };
+  g.u1 = r.pe ? r.pe === o : null;
+  g.ue = hasS ? (r.sh === gh && r.sa === ga) : null;
+  g.uTot = hasS ? Math.abs(r.sh + r.sa - tot) : null;
+  g.uGd = hasS ? Math.abs((r.sh - r.sa) - (gh - ga)) : null;
+  g.uOu = hasS ? ((r.sh + r.sa > 2.5) === (tot > 2.5)) : null;
+  g.uGg = hasS ? ((r.sh > 0 && r.sa > 0) === (gh > 0 && ga > 0)) : null;
+  g.m1 = mp === o; g.me = m.tx === gh && m.ty === ga;
+  g.mTot = Math.abs(m.lh + m.la - tot);
+  g.mOu = ((m.o25 > 0.5) === (tot > 2.5)); g.mGg = ((m.gg > 0.5) === (gh > 0 && ga > 0));
+  const po = { 1: m.p1, X: m.pX, 2: m.p2 };
+  g.brier = ['1', 'X', '2'].reduce((s, k) => s + (po[k] - (k === o ? 1 : 0)) ** 2, 0);
+  g.ll = -Math.log(Math.max(po[o], 1e-6));
+  g.stake = 0; g.pl = 0;
+  if (r.st1 > 0 && r.q1 > 1 && r.pe) { g.stake += r.st1; g.pl += g.u1 ? r.st1 * (r.q1 - 1) : -r.st1; }
+  if (r.stE > 0 && r.qE > 1 && hasS) { g.stake += r.stE; g.pl += g.ue ? r.stE * (r.qE - 1) : -r.stE; }
+  return g;
+}
+function wilson(k, n) {
+  if (!n) return [0, 0];
+  const z = 1.96, p = k / n, d = 1 + z * z / n, c = p + z * z / (2 * n), w = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n));
+  return [(c - w) / d, (c + w) / d];
+}
+const sgn2 = x => (x > 0 ? '+' : '') + fmt(x, 2);
+const mark = b => b === null ? '—' : b ? '<span class="ok" aria-label="giusto">✓</span>' : '<span class="ko" aria-label="sbagliato">✗</span>';
+
+function renderReg() {
+  const list = Object.values(REG).filter(r => !r.skip);
+  const done = [], wait = [];
+  list.forEach(r => {
+    const res = played.find(p => TEAMS[p.h].n === r.h && TEAMS[p.a].n === r.a);
+    if (res) done.push({ r, g: grade(r, res) }); else wait.push(r);
+  });
+  done.sort((a, b) => b.r.g - a.r.g);
+  $('regDone').innerHTML = done.length ?
+    '<tr><th>Partita</th><th class="n">Reale</th><th class="n">Claude</th><th class="n">Esito</th><th class="n">Ris.</th><th class="n">Modello</th><th class="n">Esito</th></tr>' +
+    done.map(({ r, g }) => `<tr><td>${r.h} – ${r.a}</td><td class="n"><b>${g.gh}-${g.ga}</b></td><td class="n">${r.sh != null ? r.sh + '-' + r.sa : (r.pe || '—')}</td>` +
+      `<td class="n">${mark(g.u1)}</td><td class="n">${mark(g.ue)}</td><td class="n">${r.mod.tx}-${r.mod.ty}</td><td class="n">${mark(g.m1)}</td></tr>`).join('') :
+    '<tr><td class="note">Ancora nessuna partita verificata. Compariranno qui appena i risultati si aggiornano.</td></tr>';
+
+  const n = done.length, S = f => done.reduce((s, d) => s + f(d), 0);
+  const have = (f) => done.filter(d => f(d) !== null);
+  let h = '';
+  if (!n) {
+    h = `<p class="note" style="margin:0">${list.length ? `${list.length} pronostici salvati, in attesa del risultato.` : 'Nessun pronostico ancora.'} Il bilancio parte quando arrivano i primi risultati.</p>`;
+  } else {
+    const kv = (a, b, c) => `<dt>${a}</dt><dd>${b}${c ? ' <span class="note">' + c + '</span>' : ''}</dd>`;
+    const rate = (k, nn) => { if (!nn) return '—'; const w = wilson(k, nn); return `${k}/${nn} · ${pct(k / nn, 0)} <span class="note">(${pct(w[0], 0)}–${pct(w[1], 0)})</span>`; };
+    const u1 = have(d => d.g.u1), ue = have(d => d.g.ue), uo = have(d => d.g.uOu), ug = have(d => d.g.uGg);
+    const home = done.filter(d => d.g.o === '1').length;
+    const mean = (arr, f) => arr.length ? arr.reduce((s, d) => s + f(d), 0) / arr.length : NaN;
+    h = `<p class="note small" style="margin:0 0 8px">Partite verificate: <b>${n}</b>${wait.length ? ` · in attesa: ${wait.length}` : ''}. Tra parentesi l'intervallo di confidenza al 95%.</p>` +
+      `<div class="cols2"><div><p class="pg">Claude</p><dl class="kv">` +
+      kv('Esito giusto', rate(u1.filter(d => d.g.u1).length, u1.length)) +
+      kv('Fiducia dichiarata media', done.some(d => d.r.p) ? pct(mean(done.filter(d => d.r.p), d => d.r.p), 0) : '—') +
+      kv('Risultato esatto', rate(ue.filter(d => d.g.ue).length, ue.length)) +
+      kv('Errore medio sul totale gol', ue.length ? fmt(mean(ue, d => d.g.uTot), 2) : '—') +
+      kv('Errore medio sulla differenza reti', ue.length ? fmt(mean(ue, d => d.g.uGd), 2) : '—') +
+      kv('Over/Under 2,5 giusto', rate(uo.filter(d => d.g.uOu).length, uo.length)) +
+      kv('Gol/NoGol giusto', rate(ug.filter(d => d.g.uGg).length, ug.length)) +
+      `</dl></div><div><p class="pg">Modello puro (stesse partite)</p><dl class="kv">` +
+      kv('Esito giusto', rate(done.filter(d => d.g.m1).length, n)) +
+      kv('Risultato esatto', rate(done.filter(d => d.g.me).length, n)) +
+      kv('Errore medio sul totale gol', fmt(mean(done, d => d.g.mTot), 2)) +
+      kv('Punteggio di Brier (1X2)', fmt(mean(done, d => d.g.brier), 3), 'più basso è meglio') +
+      kv('Over/Under 2,5 giusto', rate(done.filter(d => d.g.mOu).length, n)) +
+      kv('Gol/NoGol giusto', rate(done.filter(d => d.g.mGg).length, n)) +
+      `</dl></div></div>`;
+    h += `<p class="pg" style="margin-top:14px">Riferimenti</p><dl class="kv">` +
+      kv('Puntare sempre 1 (casa) avrebbe vinto', rate(home, n)) +
+      kv('Gol totali medi: previsti dal modello / reali', fmt(mean(done, d => d.r.mod.lh + d.r.mod.la), 2) + ' / ' + fmt(mean(done, d => d.g.tot), 2)) + `</dl>`;
+    const st = S(d => d.g.stake), pl = S(d => d.g.pl);
+    if (st > 0) h += `<p class="pg" style="margin-top:14px">Puntate virtuali</p><dl class="kv">` + kv('Giocato', eur2(st)) + kv('Utile netto', `<span class="${pl < 0 ? 'neg' : ''}">${eur2(pl)}</span>`) + kv('Rendimento sul giocato', pct(pl / st, 1)) + `</dl>`;
+    const verdict = n < 30
+      ? `Con ${n} ${n === 1 ? 'partita' : 'partite'} il campione è troppo piccolo: la forbice è molto ampia e un buon risultato può essere solo fortuna. Meglio aspettare almeno 30–50 partite (3–5 turni) prima di dare peso alle percentuali.`
+      : `Con ${n} partite il campione comincia a dire qualcosa, ma resta da sapere se batti il mercato, non solo il caso.`;
+    h += `<p class="msg" style="margin-top:14px">${verdict} Indovinare spesso non basta per guadagnare: contano le quote. Un esito azzeccato al 50% con quota media 1,80 perde soldi; per questo l'utile virtuale è la misura che decide.</p>`;
+  }
+  $('regStats').innerHTML = h;
+  if (!(document.activeElement && $('regForm').contains(document.activeElement))) renderRegForm();
+}
+
+/* Verifica sul passato: il modello viene ricostruito turno per turno con le sole partite precedenti. */
+function walk(sigma) {
+  const out = [], gs = [...new Set(played.map(r => r.g))].sort((a, b) => a - b);
+  const pa = priorsA.map(Math.log), pd = priorsD.map(Math.log);
+  for (const g of gs) {
+    const train = played.filter(r => r.g < g), test = played.filter(r => r.g === g);
+    if (train.length < 10) continue;
+    setLeague(train);
+    const f = fit(pa, pd, train, sigma);
+    const b = { 1: 0, X: 0, 2: 0 }; train.forEach(r => b[outc(r.gh, r.ga)]++);
+    const base = { 1: b[1] / train.length, X: b.X / train.length, 2: b[2] / train.length };
+    test.forEach(r => { const { mk } = predict(f.att, f.def, r.h, r.a); out.push({ r, mk, base }); });
+  }
+  setLeague(played);
+  return out;
+}
+function walkStats(out) {
+  const n = out.length; if (!n) return null;
+  let hit = 0, br = 0, ll = 0, brb = 0, ex = 0, mae = 0, ou = 0, gg = 0, px = [0, 0, 0], ox = [0, 0, 0], o25 = 0, a25 = 0, pg = 0, ag = 0, tp = 0, ta = 0;
+  let fav = { n: 0, p: 0, w: 0 };
+  out.forEach(({ r, mk, base }) => {
+    const o = outc(r.gh, r.ga), idx = o === '1' ? 0 : o === 'X' ? 1 : 2, P = [mk.p1, mk.pX, mk.p2], B = [base[1], base.X, base[2]];
+    const am = P.indexOf(Math.max(...P));
+    if (am === idx) hit++;
+    br += P.reduce((s, p, i) => s + (p - (i === idx ? 1 : 0)) ** 2, 0);
+    brb += B.reduce((s, p, i) => s + (p - (i === idx ? 1 : 0)) ** 2, 0);
+    ll += -Math.log(Math.max(P[idx], 1e-6));
+    if (mk.top[0].x === r.gh && mk.top[0].y === r.ga) ex++;
+    const tot = r.gh + r.ga; mae += Math.abs(mk.lh + mk.la - tot); tp += mk.lh + mk.la; ta += tot;
+    if ((mk.over[2.5] > .5) === (tot > 2.5)) ou++;
+    if ((mk.btts > .5) === (r.gh > 0 && r.ga > 0)) gg++;
+    P.forEach((p, i) => { px[i] += p; if (i === idx) ox[i]++; });
+    o25 += mk.over[2.5]; a25 += tot > 2.5 ? 1 : 0; pg += mk.btts; ag += (r.gh > 0 && r.ga > 0) ? 1 : 0;
+    if (P[am] >= 0.5) { fav.n++; fav.p += P[am]; if (am === idx) fav.w++; }
+  });
+  return { n, hit, brier: br / n, base: brb / n, ll: ll / n, ex, mae: mae / n, ou, gg, px: px.map(v => v / n), ox: ox.map(v => v / n), o25: o25 / n, a25: a25 / n, pg: pg / n, ag: ag / n, tp: tp / n, ta: ta / n, fav };
+}
+let walkDone = false;
+function renderWalk() {
+  const sig = [0.15, 0.20, 0.25, 0.35, 0.50, 0.80];
+  const res = sig.map(s => ({ s, st: walkStats(walk(s)) })).filter(x => x.st);
+  if (!res.length) { $('wf').innerHTML = '<p class="note">Servono più giornate giocate.</p>'; return; }
+  const best = res.reduce((b, x) => x.st.ll < b.st.ll ? x : b, res[0]);
+  const S = walkStats(walk(SIGMA)), n = S.n, w = wilson(S.hit, n);
+  const kv = (a, b) => `<dt>${a}</dt><dd>${b}</dd>`;
+  const favTxt = S.fav.n ? `${S.fav.n} favorite (≥50%): previsto ${pct(S.fav.p / S.fav.n, 0)}, realizzato ${pct(S.fav.w / S.fav.n, 0)}` : '—';
+  let h = `<div class="cols2"><div><p class="pg">Con la taratura attuale (σ = ${fmt(SIGMA, 2)}) su ${n} partite</p><dl class="kv">` +
+    kv('Esito giusto', `${S.hit}/${n} · ${pct(S.hit / n, 0)} (${pct(w[0], 0)}–${pct(w[1], 0)})`) +
+    kv('Risultato esatto', `${S.ex}/${n} · ${pct(S.ex / n, 0)}`) +
+    kv('Errore medio sul totale gol', fmt(S.mae, 2)) +
+    kv('Gol totali: previsti / reali', fmt(S.tp, 2) + ' / ' + fmt(S.ta, 2)) +
+    kv('Over/Under 2,5 giusto', `${S.ou}/${n} · ${pct(S.ou / n, 0)}`) +
+    kv('Gol/NoGol giusto', `${S.gg}/${n} · ${pct(S.gg / n, 0)}`) +
+    kv('Brier modello / riferimento', fmt(S.brier, 3) + ' / ' + fmt(S.base, 3)) +
+    `</dl></div><div><p class="pg">Probabilità medie previste / frequenze reali</p><dl class="kv">` +
+    kv('Vittoria casa', pct(S.px[0], 0) + ' / ' + pct(S.ox[0], 0)) + kv('Pareggio', pct(S.px[1], 0) + ' / ' + pct(S.ox[1], 0)) + kv('Vittoria trasferta', pct(S.px[2], 0) + ' / ' + pct(S.ox[2], 0)) +
+    kv('Over 2,5', pct(S.o25, 0) + ' / ' + pct(S.a25, 0)) + kv('Gol/Gol', pct(S.pg, 0) + ' / ' + pct(S.ag, 0)) + kv('Favorite', favTxt) + `</dl></div></div>`;
+  h += `<p class="pg" style="margin-top:16px">Quanto fidarsi dei valori iniziali (σ piccolo = molta fiducia nelle stime iniziali, σ grande = contano di più i risultati)</p>` +
+    `<div class="scroll"><table><tr><th>σ</th><th class="n">Esiti giusti</th><th class="n">Brier</th><th class="n">Log-perdita</th><th class="n">Errore gol</th><th></th></tr>` +
+    res.map(x => `<tr${x.s === best.s ? ' class="val"' : ''}><td class="mono">${fmt(x.s, 2)}</td><td class="n">${pct(x.st.hit / x.st.n, 0)}</td><td class="n">${fmt(x.st.brier, 3)}</td><td class="n">${fmt(x.st.ll, 3)}</td><td class="n">${fmt(x.st.mae, 2)}</td>` +
+      `<td>${Math.abs(x.s - SIGMA) < 1e-9 ? '<span class="tag">in uso</span>' : `<button class="add" type="button" data-sig="${x.s}">Usa</button>`}${x.s === best.s ? ' <span class="pill">migliore</span>' : ''}</td></tr>`).join('') + `</table></div>` +
+    `<p class="note small" style="margin-bottom:0">Su ${n} partite le differenze tra una riga e l'altra sono piccole rispetto al rumore: usale come indizio, non come verdetto. La log-perdita punisce di più le previsioni sicure e sbagliate.</p>`;
+  $('wf').innerHTML = h;
+}
+
+document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+$('selG').addEventListener('change', renderCal);
+$('gCur').addEventListener('click', () => { $('selG').value = CUR; renderCal(); });
+$('gNext').addEventListener('click', () => { $('selG').value = Math.min(NGIOR, CUR + 1); renderCal(); });
+$('pick').addEventListener('click', e => {
+  const b = e.target.closest('[data-pick]'); if (!b) return;
+  const [h, a] = b.dataset.pick.split(',');
+  $('selH').value = h; $('selA').value = a; changeMatch();
+});
+$('cal').addEventListener('click', e => {
+  const d = e.target.dataset.an; if (!d) return;
+  const [h, a] = d.split(',');
+  $('selH').value = h; $('selA').value = a; showTab('match'); changeMatch(); window.scrollTo(0, 0);
+});
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+  view = b.dataset.view;
+  document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  renderTable();
+}));
+['selH', 'selA'].forEach(id => $(id).addEventListener('change', changeMatch));
+$('swap').addEventListener('click', () => { const t = $('selH').value; $('selH').value = $('selA').value; $('selA').value = t; changeMatch(); });
+$('moreOdds').innerHTML = MORE.map(x => `<div><label for="${x[0]}">${x[1]}</label><input class="num" id="${x[0]}" inputmode="decimal"></div>`).join('');
+$('selOp').innerHTML = OPS.map(o => `<option>${o}</option>`).join('');
+ALLIDS.forEach(id => $(id).addEventListener('input', () => { storeInput(id); renderMatch(); renderOps(); }));
+['bank', 'kf', 'minev', 'trust', 'sim'].forEach(id => $(id).addEventListener('input', renderMatch));
+['sStake', 'sBonus', 'bank', 'kf'].forEach(id => $(id).addEventListener('input', renderSlip));
+$('selOp').addEventListener('change', () => { opActive = $('selOp').value; saveQ(); loadInputs(); renderMatch(); });
+$('opChips').addEventListener('click', e => {
+  const b = e.target.closest('[data-op]'); if (!b) return;
+  opActive = b.dataset.op; saveQ(); loadInputs(); renderMatch();
+});
+const onAdd = e => { const i = e.target.dataset.add; if (i !== undefined) addToSlip(+i); };
+$('ev').addEventListener('click', onAdd);
+$('evb').addEventListener('click', onAdd);
+$('sList').addEventListener('click', e => { const i = e.target.dataset.rm; if (i === undefined) return; slip.splice(+i, 1); $('sNote').textContent = ''; renderSlip(); });
+$('sClear').addEventListener('click', () => { slip = []; $('sNote').textContent = ''; renderSlip(); });
+$('wf').addEventListener('click', e => {
+  const s = parseFloat(e.target.dataset.sig); if (!(s > 0)) return;
+  SIGMA = s; try { localStorage.setItem('pronostici-sigma-26', String(s)); } catch (er) {}
+  recompute(); renderWalk();
+});
+$('pReset').addEventListener('click', () => { priorsA = TEAMS.map(t => t.a); priorsD = TEAMS.map(t => t.d); recompute(); });
+$('tt').addEventListener('change', e => {
+  const t = e.target, v = parseFloat(t.value);
+  if (!(v > 0.2 && v < 3)) return;
+  if (t.dataset.pa !== undefined) priorsA[+t.dataset.pa] = v;
+  if (t.dataset.pd !== undefined) priorsD[+t.dataset.pd] = v;
+  recompute();
+});
+function recompute() { refit(); save(); renderStato(); renderMatch(); renderCal(); renderTeams(); renderReg(); }
+
+load(); loadQ(); loadReg(); fillSelects();
+$('selG').innerHTML = Array.from({ length: NGIOR }, (_, i) => `<option value="${i + 1}">${i + 1}ª giornata</option>`).join('');
+$('selG').value = CUR;
+refit(); loadInputs(); renderStato(); renderMatch(); renderCal(); renderTable(); renderOps(); renderTeams(); renderSlip(); renderReg(); initDb();
+</script>
+
+</body></html>
