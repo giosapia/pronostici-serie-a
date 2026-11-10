@@ -7,16 +7,24 @@ if (!KEY) { console.error('Manca il segreto ODDSPAPI_KEY'); process.exit(1); }
 const BASE = 'https://api.oddspapi.io/v4';
 let richieste = 0;
 
+const dormi = ms => new Promise(r => setTimeout(r, ms));
+let ultima = 0;
 async function get(path, params = {}) {
   const u = new URL(BASE + path);
   for (const [k, v] of Object.entries(params)) u.searchParams.set(k, v);
   u.searchParams.set('apiKey', KEY);
-  richieste++;
-  const r = await fetch(u);
-  const t = await r.text();
-  let body; try { body = JSON.parse(t); } catch { body = t.slice(0, 500); }
-  console.log(`GET ${path} ${JSON.stringify(params)} -> ${r.status}`);
-  return { status: r.status, body };
+  for (let tentativo = 1; tentativo <= 3; tentativo++) {
+    // il servizio impone una pausa tra una richiesta e l'altra
+    const attesa = Math.max(0, ultima + 7000 - Date.now()); if (attesa) await dormi(attesa);
+    richieste++; ultima = Date.now();
+    const r = await fetch(u);
+    const t = await r.text();
+    let body; try { body = JSON.parse(t); } catch { body = t.slice(0, 500); }
+    console.log(`GET ${path} ${JSON.stringify(params)} -> ${r.status} (tentativo ${tentativo})`, r.status === 429 ? JSON.stringify(body).slice(0, 300) + ' Retry-After=' + r.headers.get('retry-after') : '');
+    if (r.status !== 429) return { status: r.status, body };
+    await dormi(Math.max(10000, (parseFloat(r.headers.get('retry-after')) || 0) * 1000 + 1000));
+  }
+  return { status: 429, body: null };
 }
 const save = (name, obj) => { fs.mkdirSync('data/discovery', { recursive: true }); fs.writeFileSync(`data/discovery/${name}.json`, JSON.stringify(obj, null, 1)); };
 const arr = b => Array.isArray(b) ? b : (b && typeof b === 'object' ? Object.values(b).find(Array.isArray) || [] : []);
@@ -62,8 +70,7 @@ if (MODE === 'quote') {
   for (const f of arr(fx.body)) anag[f.fixtureId] = { casa: nome(f.participant1ShortName, f.participant1Name), trasf: nome(f.participant2ShortName, f.participant2Name), nomeCasa: f.participant1Name, nomeTrasf: f.participant2Name, inizio: f.startTime };
   const partite = {};
   const operatori = [];
-  const bm = await get('/bookmakers');
-  const cloni = {}; for (const b of arr(bm.body)) cloni[b.slug] = b.cloneOf || null;
+  const cloni = { 'snai.it': 'sisal.it', 'sisal.it': null, 'eurobet.it': null, 'goldbet.it': null };
   for (const [slug, etichetta] of OPERATORI) {
     const od = await get('/odds-by-tournaments', { bookmaker: slug, tournamentIds: TORNEO });
     operatori.push({ slug, nome: etichetta, cloneDi: cloni[slug] || null, stato: od.status });
