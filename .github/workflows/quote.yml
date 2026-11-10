@@ -1,5 +1,7 @@
 name: Quote operatori
 on:
+  schedule:
+    - cron: '30 5 * * *'
   workflow_dispatch:
     inputs:
       mode:
