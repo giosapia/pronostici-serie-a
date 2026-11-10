@@ -17,8 +17,9 @@ async function get(path, params = {}) {
     // il servizio impone una pausa tra una richiesta e l'altra
     const attesa = Math.max(0, ultima + 7000 - Date.now()); if (attesa) await dormi(attesa);
     richieste++; ultima = Date.now();
-    const r = await fetch(u);
-    const t = await r.text();
+    let r, t;
+    try { r = await fetch(u, { signal: AbortSignal.timeout(30000) }); t = await r.text(); }
+    catch (e) { console.log(`GET ${path} -> errore o tempo scaduto: ${e.name}`); if (tentativo === 3) return { status: 0, body: null }; await dormi(10000); continue; }
     let body; try { body = JSON.parse(t); } catch { body = t.slice(0, 500); }
     console.log(`GET ${path} ${JSON.stringify(params)} -> ${r.status} (tentativo ${tentativo})`, r.status === 429 ? JSON.stringify(body).slice(0, 300) + ' Retry-After=' + r.headers.get('retry-after') : '');
     if (r.status !== 429) return { status: r.status, body };
