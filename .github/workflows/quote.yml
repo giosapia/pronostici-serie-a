@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "discover = esplora il servizio (poche richieste)"
-        default: discover
+        description: "quote = scarica le quote (5 richieste); discover = esplora il servizio"
+        default: quote
 permissions:
   contents: write
 jobs:
@@ -18,7 +18,7 @@ jobs:
       - name: Scarica le quote
         env:
           ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
-          MODE: ${{ github.event.inputs.mode || 'discover' }}
+          MODE: ${{ github.event.inputs.mode || 'quote' }}
         run: node scripts/quote.mjs
       - name: Salva i file nel repository
         run: |

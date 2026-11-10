@@ -46,4 +46,45 @@ if (MODE === 'discover') {
   out.richiesteUsate = richieste;
   save('riepilogo', out);
 }
+
+if (MODE === 'quote') {
+  // SNAI e Sisal, e Goldbet con i suoi marchi, sono "cloni" nel servizio: il servizio può dare le stesse quote.
+  const OPERATORI = [['snai.it', 'SNAI'], ['sisal.it', 'Sisal'], ['eurobet.it', 'Eurobet'], ['goldbet.it', 'Goldbet']];
+  const TORNEO = 23; // Serie A (Italia)
+  const NOMI = ['Inter', 'Napoli', 'Juventus', 'Milan', 'Roma', 'Atalanta', 'Lazio', 'Bologna', 'Fiorentina', 'Como', 'Torino', 'Udinese', 'Genoa', 'Cagliari', 'Parma', 'Lecce', 'Sassuolo', 'Venezia', 'Frosinone', 'Monza'];
+  const nome = (a, b) => { const t = `${a || ''} ${b || ''}`.toLowerCase(); return NOMI.find(n => t.includes(n.toLowerCase())) || (b || a); };
+  const MERCATI = { '101': ['1', 'X', '2'], '104': ['G', 'N'], '108': ['O15', 'U15'], '1010': ['O25', 'U25'], '1012': ['O35', 'U35'] };
+  // ordine degli esiti (id) per ogni mercato: 1X2 -> 101,102,103; G/N -> 104,105; Over/Under -> id del mercato (Over), id+1 (Under)
+  const ESITI = { '101': { 101: '1', 102: 'X', 103: '2' }, '104': { 104: 'G', 105: 'N' }, '108': { 108: 'O15', 109: 'U15' }, '1010': { 1010: 'O25', 1011: 'U25' }, '1012': { 1012: 'O35', 1013: 'U35' } };
+
+  const fx = await get('/fixtures', { tournamentId: TORNEO });
+  const anag = {};
+  for (const f of arr(fx.body)) anag[f.fixtureId] = { casa: nome(f.participant1ShortName, f.participant1Name), trasf: nome(f.participant2ShortName, f.participant2Name), nomeCasa: f.participant1Name, nomeTrasf: f.participant2Name, inizio: f.startTime };
+  const partite = {};
+  const operatori = [];
+  const bm = await get('/bookmakers');
+  const cloni = {}; for (const b of arr(bm.body)) cloni[b.slug] = b.cloneOf || null;
+  for (const [slug, etichetta] of OPERATORI) {
+    const od = await get('/odds-by-tournaments', { bookmaker: slug, tournamentIds: TORNEO });
+    operatori.push({ slug, nome: etichetta, cloneDi: cloni[slug] || null, stato: od.status });
+    if (od.status !== 200) continue;
+    for (const f of arr(od.body)) {
+      const bo = f.bookmakerOdds && f.bookmakerOdds[slug];
+      if (!bo || !bo.markets) continue;
+      const a = anag[f.fixtureId] || {};
+      const p = partite[f.fixtureId] ||= { id: f.fixtureId, casa: a.casa, trasf: a.trasf, inizio: f.startTime, quote: {} };
+      const q = p.quote[slug] = {};
+      for (const [mid, mapEsiti] of Object.entries(ESITI)) {
+        const m = bo.markets[mid]; if (!m) continue;
+        for (const [oid, sigla] of Object.entries(mapEsiti)) {
+          const o = m.outcomes && m.outcomes[oid]; const pl = o && o.players && o.players['0'];
+          if (pl && pl.active !== false && pl.price > 1) q[sigla] = pl.price;
+        }
+      }
+    }
+  }
+  const out = { aggiornato: new Date().toISOString(), fonte: 'OddsPapi', operatori, partite: Object.values(partite).sort((x, y) => x.inizio.localeCompare(y.inizio)) };
+  fs.writeFileSync('data/quote.json', JSON.stringify(out, null, 1));
+  console.log('Partite con quote:', out.partite.length);
+}
 console.log('Richieste usate in questa esecuzione:', richieste);
