@@ -93,6 +93,17 @@ if (MODE === 'quote') {
   }
   const out = { aggiornato: new Date().toISOString(), fonte: 'OddsPapi', operatori, partite: Object.values(partite).sort((x, y) => x.inizio.localeCompare(y.inizio)) };
   fs.writeFileSync('data/quote.json', JSON.stringify(out, null, 1));
+  // Storico: ultima fotografia delle quote 1X2 di ogni partita (si sovrascrive finché la partita è in programma).
+  try {
+    const f = 'data/storico-quote.json';
+    const st = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
+    for (const p of out.partite) {
+      const q = {};
+      for (const [sl, v] of Object.entries(p.quote || {})) if (v['1'] && v['X'] && v['2']) q[sl] = { '1': v['1'], 'X': v['X'], '2': v['2'] };
+      if (Object.keys(q).length) st[p.casa + '_' + p.trasf + '_' + String(p.inizio).slice(0, 10)] = { casa: p.casa, trasf: p.trasf, inizio: p.inizio, agg: out.aggiornato, quote: q };
+    }
+    fs.writeFileSync(f, JSON.stringify(st, null, 1));
+  } catch (e) { console.log('storico non aggiornato:', e.message); }
   console.log('Partite con quote:', out.partite.length);
 }
 console.log('Richieste usate in questa esecuzione:', richieste);

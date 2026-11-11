@@ -457,6 +457,7 @@ const getJ = async p => { try { const r = await fetch(p + '?t=' + Date.now()); r
 const DATA = await getJ('data/dati.json');
 const FEEDJ = await getJ('data/quote.json');
 const PRONJ = await getJ('data/pronostici.json');
+const STORJ = (await getJ('data/storico-quote.json')) || {};
 if (!DATA) { document.body.innerHTML = '<p style="padding:24px;font-family:sans-serif">Impossibile caricare data/dati.json.</p>'; throw new Error('no data'); }
 const played = DATA.risultati.map(r => ({ g: r[0], h: ix(r[1]), gh: r[2], ga: r[3], a: ix(r[4]) })).filter(r => r.h >= 0 && r.a >= 0);
 const fixtures = DATA.calendario.map(f => ({ g: f[0], h: ix(f[1]), a: ix(f[2]), when: f[3] })).filter(f => f.h >= 0 && f.a >= 0);
@@ -930,6 +931,19 @@ function renderReg() {
       `</dl></div></div>`;
     h += `<p class="pg" style="margin-top:14px">Riferimenti</p><dl class="kv">` +
       kv('Puntare sempre 1 (casa) avrebbe vinto', rate(home, n)) +
+      (() => {
+        const fav = done.map(d => {
+          const e = Object.values(STORJ).find(x => x.casa === d.r.h && x.trasf === d.r.a); if (!e) return null;
+          const ops = Object.values(e.quote), avg = k => ops.reduce((t, q) => t + 1 / q[k], 0) / ops.length;
+          const pr = { '1': avg('1'), 'X': avg('X'), '2': avg('2') };
+          return { ok: Object.keys(pr).sort((x, y) => pr[y] - pr[x])[0] === d.g.o, cl: d.g.u1 };
+        }).filter(x => x);
+        return kv('Favorita secondo le quote giusta', fav.length ? rate(fav.filter(x => x.ok).length, fav.length) : 'da accumulare', fav.length ? '' : 'le quote si archiviano da oggi');
+      })() +
+      (() => {
+        const gs = [...new Set(done.map(d => d.r.g))].sort((a, b) => a - b);
+        return gs.map(g => { const x = done.filter(d => d.r.g === g), c = x.filter(d => d.g.u1).length, m = x.filter(d => d.g.m1).length; return kv(g + 'ª giornata: Claude / modello', c + '/' + x.length + ' · ' + m + '/' + x.length); }).join('');
+      })() +
       kv('Gol totali medi: previsti dal modello / reali', fmt(mean(done, d => d.r.mod.lh + d.r.mod.la), 2) + ' / ' + fmt(mean(done, d => d.g.tot), 2)) + `</dl>`;
     const st = S(d => d.g.stake), pl = S(d => d.g.pl);
     if (st > 0) h += `<p class="pg" style="margin-top:14px">Puntate virtuali</p><dl class="kv">` + kv('Giocato', eur2(st)) + kv('Utile netto', `<span class="${pl < 0 ? 'neg' : ''}">${eur2(pl)}</span>`) + kv('Rendimento sul giocato', pct(pl / st, 1)) + `</dl>`;
