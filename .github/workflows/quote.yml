@@ -2,6 +2,7 @@ name: Quote operatori
 on:
   schedule:
     - cron: '30 5 * * *'
+    - cron: '30 11 * * *'
   workflow_dispatch:
     inputs:
       mode:
@@ -22,6 +23,7 @@ jobs:
         env:
           ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
           MODE: ${{ github.event.inputs.mode || 'quote' }}
+          SOLO_SE_PARTITE: ${{ github.event.schedule == '30 11 * * *' && '1' || '' }}
         run: node scripts/quote.mjs
       - name: Salva i file nel repository
         run: |

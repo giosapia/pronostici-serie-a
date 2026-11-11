@@ -4,6 +4,13 @@ import fs from 'node:fs';
 const KEY = process.env.ODDSPAPI_KEY;
 const MODE = process.env.MODE || 'discover';
 if (!KEY) { console.error('Manca il segreto ODDSPAPI_KEY'); process.exit(1); }
+// Esecuzione di metà giornata: parte solo se oggi (ora italiana) c'è almeno una partita nelle quote già salvate.
+if (process.env.SOLO_SE_PARTITE === '1') {
+  const oggi = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
+  let giocano = false;
+  try { giocano = JSON.parse(fs.readFileSync('data/quote.json', 'utf8')).partite.some(p => new Date(p.inizio).toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' }) === oggi); } catch (e) {}
+  if (!giocano) { console.log('Oggi nessuna partita: nessuna richiesta.'); process.exit(0); }
+}
 const BASE = 'https://api.oddspapi.io/v4';
 let richieste = 0;
 
