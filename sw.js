@@ -1,5 +1,5 @@
 // Prima la rete (dati sempre aggiornati), la copia salvata solo se manca la connessione.
-const C = 'serie-a-v2';
+const C = 'serie-a-v3';
 self.addEventListener('install', e => { self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x !== C).map(x => caches.delete(x)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {

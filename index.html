@@ -947,10 +947,33 @@ function renderReg() {
       kv('Gol totali medi: previsti dal modello / reali', fmt(mean(done, d => d.r.mod.lh + d.r.mod.la), 2) + ' / ' + fmt(mean(done, d => d.g.tot), 2)) + `</dl>`;
     const st = S(d => d.g.stake), pl = S(d => d.g.pl);
     if (st > 0) h += `<p class="pg" style="margin-top:14px">Puntate virtuali</p><dl class="kv">` + kv('Giocato', eur2(st)) + kv('Utile netto', `<span class="${pl < 0 ? 'neg' : ''}">${eur2(pl)}</span>`) + kv('Rendimento sul giocato', pct(pl / st, 1)) + `</dl>`;
-    const verdict = n < 30
-      ? `Con ${n} ${n === 1 ? 'partita' : 'partite'} il campione è troppo piccolo: la forbice è molto ampia e un buon risultato può essere solo fortuna. Meglio aspettare almeno 30–50 partite (3–5 turni) prima di dare peso alle percentuali.`
-      : `Con ${n} partite il campione comincia a dire qualcosa, ma resta da sapere se batti il mercato, non solo il caso.`;
-    h += `<p class="msg" style="margin-top:14px">${verdict} Indovinare spesso non basta per guadagnare: contano le quote. Un esito azzeccato al 50% con quota media 1,80 perde soldi; per questo l'utile virtuale è la misura che decide.</p>`;
+    // Giudizio sul metodo: soglie fisse, decise il 11/11/2026.
+    const wl = wilson(u1.filter(d => d.g.u1).length, u1.length);
+    const mk = done.map(d => {
+      const e = Object.values(STORJ).find(x => x.casa === d.r.h && x.trasf === d.r.a); if (!e) return null;
+      const ops = Object.values(e.quote), P = {}; let t = 0;
+      ['1', 'X', '2'].forEach(k => { P[k] = ops.reduce((s, q) => s + 1 / q[k], 0) / ops.length; t += P[k]; });
+      ['1', 'X', '2'].forEach(k => { P[k] /= t; });
+      return { bm: ['1', 'X', '2'].reduce((s, k) => s + (P[k] - (k === d.g.o ? 1 : 0)) ** 2, 0), bc: d.g.brier };
+    }).filter(x => x);
+    let tappa, giudizio;
+    if (n < 50) { tappa = 'Tappa 1 di 3'; giudizio = `Campione insufficiente: ${n} partite su 50 per il primo controllo (circa 5 giornate). Nessuna conclusione possibile.`; }
+    else if (n < 150) {
+      tappa = 'Tappa 2 di 3';
+      giudizio = wl[1] < 0.5 ? `Segnale negativo: l'esito giusto è sotto il 50% anche nella stima più favorevole. Il metodo non va usato per puntare.`
+        : `Nessun segnale di metodo rotto (esito giusto ${pct(u1.filter(d => d.g.u1).length / u1.length, 0)}). Per giudicare se batte il mercato servono almeno 150 partite con quote archiviate: ora ${mk.length}.`;
+    } else {
+      tappa = 'Tappa 3 di 3';
+      if (mk.length < 100) giudizio = `Ho ${n} partite ma solo ${mk.length} con le quote archiviate: ne servono almeno 100 per il confronto con il mercato.`;
+      else {
+        const dm = mean(mk, x => x.bc - x.bm);
+        giudizio = dm < -0.005 ? `Primo segnale positivo: su ${mk.length} partite le probabilità sono più precise di quelle del mercato (Brier ${fmt(mean(mk, x => x.bc), 3)} contro ${fmt(mean(mk, x => x.bm), 3)}). Va confermato su una stagione intera prima di puntare cifre importanti.`
+          : dm > 0.005 ? `Segnale negativo: su ${mk.length} partite il mercato è più preciso (Brier ${fmt(mean(mk, x => x.bm), 3)} contro ${fmt(mean(mk, x => x.bc), 3)}). Puntare su questo metodo significa pagare il margine senza compenso.`
+          : `Nessuna differenza dal mercato (Brier ${fmt(mean(mk, x => x.bc), 3)} contro ${fmt(mean(mk, x => x.bm), 3)}, su ${mk.length} partite): puntando si paga il margine del bookmaker.`;
+      }
+    }
+    h += `<div class="mod" style="margin-top:14px"><p class="pg" style="margin:0 0 4px">Giudizio sul metodo · ${tappa}</p><p class="small" style="margin:0">${giudizio}</p>` +
+      `<p class="note small" style="margin:6px 0 0">Soglie: 50 partite = controllo di base; 150 con quote archiviate = primo confronto con il mercato; una stagione (380) = giudizio solido. Indovinare spesso non basta: contano le quote, e il mercato è molto efficiente.</p></div>`;
   }
   $('regStats').innerHTML = h;
   if (!(document.activeElement && $('regForm').contains(document.activeElement))) renderRegForm();
