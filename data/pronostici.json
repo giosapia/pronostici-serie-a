@@ -880,5 +880,31 @@
     "sa": 2,
     "sh": 0,
     "ts": "2026-10-28T08:17:41+01:00"
+  },
+  "13_Venezia_Bologna": {
+    "id": "13_Venezia_Bologna",
+    "autore": "Claude",
+    "g": 13,
+    "h": "Venezia",
+    "a": "Bologna",
+    "pe": "2",
+    "sh": 0,
+    "sa": 2,
+    "p": 0.55,
+    "note": "Modello 55% Bologna, 1-1 e 0-2 quasi alla pari. Venezia penultimo (6 punti), reduce dal 4-0 con la Juve, senza Sverko, Adorante, Franjic, dubbi Correia e Basic. Bologna 9° con 4 vittorie nelle ultime 5, assenti Holm, Enem, Miranda; ballottaggi in attacco. Fonti: Tuttosport, FantaConsigli.",
+    "mod": {
+      "p1": 0.1971,
+      "pX": 0.2507,
+      "p2": 0.5523,
+      "lh": 0.941,
+      "la": 1.727,
+      "o25": 0.4984,
+      "gg": 0.508,
+      "tx": 1,
+      "ty": 1,
+      "tp": 0.1195
+    },
+    "ts": "2026-11-27T08:14:47+01:00",
+    "bloccato": true
   }
 }
