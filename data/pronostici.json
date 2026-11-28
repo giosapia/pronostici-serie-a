@@ -906,5 +906,83 @@
     },
     "ts": "2026-11-27T08:14:47+01:00",
     "bloccato": true
+  },
+  "13_Frosinone_Parma": {
+    "id": "13_Frosinone_Parma",
+    "autore": "Claude",
+    "g": 13,
+    "h": "Frosinone",
+    "a": "Parma",
+    "pe": "1",
+    "sh": 2,
+    "sa": 1,
+    "p": 0.45,
+    "note": "Assenti: Raimondo e Birligea (Frosinone), Romero e Drobnic (Parma); dubbi Grillitsch e Diego Carlos. Nessuno squalificato. Frosinone 7° e in casa, Parma 17°: leggero vantaggio ai padroni di casa, ma partita equilibrata. Fonti: DAZN, Fantacalcio.it.",
+    "mod": {
+      "p1": 0.4715,
+      "pX": 0.2526,
+      "p2": 0.2759,
+      "lh": 1.692,
+      "la": 1.248,
+      "o25": 0.5634,
+      "gg": 0.5885,
+      "tx": 1,
+      "ty": 1,
+      "tp": 0.1183
+    },
+    "ts": "2026-11-28T07:14:49.712Z",
+    "bloccato": true
+  },
+  "13_Torino_Lazio": {
+    "id": "13_Torino_Lazio",
+    "autore": "Claude",
+    "g": 13,
+    "h": "Torino",
+    "a": "Lazio",
+    "pe": "2",
+    "sh": 1,
+    "sa": 2,
+    "p": 0.4,
+    "note": "Lazio senza Nuno Tavares, Marusic, Sutalo e Taylor; Zaccagni recuperato ma da valutare. Torino senza Ismajli, dubbi Belghali e Israel, Vlasic recuperato. Il modello vede la Lazio favorita, ma la difesa rimaneggiata abbassa la fiducia. Fonte: DAZN.",
+    "mod": {
+      "p1": 0.2281,
+      "pX": 0.2415,
+      "p2": 0.5303,
+      "lh": 1.136,
+      "la": 1.833,
+      "o25": 0.5697,
+      "gg": 0.5767,
+      "tx": 1,
+      "ty": 1,
+      "tp": 0.1134
+    },
+    "ts": "2026-11-28T07:14:49.712Z",
+    "bloccato": true
+  },
+  "13_Inter_Genoa": {
+    "id": "13_Inter_Genoa",
+    "autore": "Claude",
+    "g": 13,
+    "h": "Inter",
+    "a": "Genoa",
+    "pe": "1",
+    "sh": 2,
+    "sa": 0,
+    "p": 0.65,
+    "note": "Inter senza Calhanoglu e Bonny; Bastoni in dubbio e Zielinski non al meglio, ma rosa profonda e Lautaro/Pio Esposito pronti. Genoa senza indisponibili, Frendrup recuperato, Ostigard da valutare. Inter nettamente favorita in casa. Fonte: DAZN.",
+    "mod": {
+      "p1": 0.6758,
+      "pX": 0.1944,
+      "p2": 0.1298,
+      "lh": 2.257,
+      "la": 0.896,
+      "o25": 0.6102,
+      "gg": 0.5352,
+      "tx": 2,
+      "ty": 0,
+      "tp": 0.1088
+    },
+    "ts": "2026-11-28T07:14:49.712Z",
+    "bloccato": true
   }
 }
